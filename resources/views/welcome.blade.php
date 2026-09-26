@@ -1,76 +1,112 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ config('app.name') }}</title>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="min-h-screen bg-slate-950 text-white">
-        <header x-data="{ open: false }" @keydown.escape.window="open = false" class="border-b border-white/10 bg-slate-950/95 backdrop-blur">
-            <div class="mx-auto max-w-6xl px-6">
-                <div class="flex h-[4.5rem] items-center justify-between">
-                    <a href="{{ url('/') }}" class="flex items-center gap-2.5" aria-label="{{ config('company.name') }} home">
-                        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-400 text-slate-950">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 16.5 7.2 8h9.6l2.2 8.5M7.2 12h9.6M8 16.5v2m8-2v2M6 16.5h12M7 8l1.4-2h7.2L17 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><circle cx="8" cy="16.5" r="1" fill="currentColor" /><circle cx="16" cy="16.5" r="1" fill="currentColor" /></svg>
-                        </span>
-                        <span class="text-lg font-bold tracking-tight">{{ config('company.name') }}</span>
-                    </a>
-                    <nav class="hidden items-center gap-1 md:flex" aria-label="Main navigation">
-                        <a href="#services" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">Services</a>
-                        <a href="#how-it-works" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">How it works</a>
-                        <a href="#contact" class="rounded-lg px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">Help</a>
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="ml-3 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/40">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="ml-3 rounded-lg px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/5">Log in</a>
-                            <a href="{{ route('register') }}" class="rounded-full bg-cyan-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-cyan-300">Book a ride</a>
-                        @endauth
-                    </nav>
-                    <button type="button" @click="open = !open" :aria-expanded="open.toString()" aria-controls="public-mobile-navigation" class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-200 hover:bg-white/10 md:hidden">
-                        <span class="sr-only">Toggle navigation</span>
-                        <svg x-show="!open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M4 12h16M4 17h16" /></svg>
-                        <svg x-cloak x-show="open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m6 6 12 12M6 18 18 6" /></svg>
-                    </button>
-                </div>
-                <div id="public-mobile-navigation" x-cloak x-show="open" x-transition.origin.top class="border-t border-white/10 pb-5 pt-3 md:hidden">
-                    <div class="space-y-1">
-                        <a href="#services" @click="open = false" class="block rounded-lg px-3 py-3 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white">Services</a>
-                        <a href="#how-it-works" @click="open = false" class="block rounded-lg px-3 py-3 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white">How it works</a>
-                        <a href="#contact" @click="open = false" class="block rounded-lg px-3 py-3 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white">Help</a>
-                    </div>
-                    <div class="mt-3 flex gap-3 border-t border-white/10 pt-4">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="flex-1 rounded-full border border-white/20 px-4 py-3 text-center text-sm font-semibold">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="flex-1 rounded-full border border-white/20 px-4 py-3 text-center text-sm font-semibold">Log in</a>
-                            <a href="{{ route('register') }}" class="flex-1 rounded-full bg-cyan-400 px-4 py-3 text-center text-sm font-bold text-slate-950">Book a ride</a>
-                        @endauth
-                    </div>
-                </div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ config('company.name', 'Arctic Hero') }} | Move with purpose</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="site-shell">
+        <header class="site-header" x-data="{ open: false }">
+            <a href="{{ url('/') }}" class="brand" aria-label="Arctic Hero home">
+                <span class="brand-mark"><span></span><span></span><span></span></span>
+                <span>ARCTIC <b>HERO</b></span>
+            </a>
+            <nav class="desktop-nav" aria-label="Main navigation">
+                <a href="#book">Book a ride</a>
+                <a href="#services">Ride options</a>
+                <a href="#story">How it works</a>
+                <a href="#locations" class="location-link">Oulu <span class="chevron">⌄</span></a>
+            </nav>
+            <div class="header-actions">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="text-link">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="text-link">Log in</a>
+                @endauth
+                <a href="#book" class="button button-small">Book a ride <span class="arrow">↗</span></a>
             </div>
+            <button type="button" class="menu-toggle" @click="open = !open" :aria-expanded="open.toString()" aria-label="Toggle navigation">
+                <span></span><span></span>
+            </button>
+            <nav x-cloak x-show="open" class="mobile-nav" aria-label="Mobile navigation">
+                <a href="#book" @click="open = false">Book a ride</a>
+                <a href="#services" @click="open = false">Ride options</a>
+                <a href="#story" @click="open = false">How it works</a>
+                <a href="#contact" @click="open = false">Contact us</a>
+            </nav>
         </header>
-        <main class="mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-20 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
-            <section id="how-it-works">
-                <p class="mb-5 text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Oulu transportation</p>
-                <h1 class="max-w-3xl text-5xl font-semibold tracking-tight sm:text-6xl">Reliable journeys, handled by Arctic Hero.</h1>
-                <p class="mt-6 max-w-xl text-lg leading-8 text-slate-300">Request a company-operated taxi for airport transfers, city trips, group travel, and exploring Oulu. Our team contacts you before confirming every booking.</p>
-                <div class="mt-8 flex flex-wrap gap-4">
-                    <a href="#" class="rounded-full bg-cyan-400 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-300">Book a taxi</a>
-                    <a href="tel:{{ config('company.phone') }}" class="rounded-full border border-slate-700 px-6 py-3 font-semibold text-slate-200 hover:border-slate-500">Call {{ config('company.phone') }}</a>
+
+        <main>
+            <section id="book" class="hero section-dark">
+                <div class="hero-copy">
+                    <p class="eyebrow">Your ride, your way <span>Oulu, Finland</span></p>
+                    <h1>Where to<br><em>next?</em></h1>
+                    <p class="hero-intro">Reliable local rides, airport transfers, and group travel. Tell us where you are going and we will take care of the rest.</p>
+                    <a href="#services" class="circle-link">See all ride options <span>↗</span></a>
+                </div>
+                <form class="booking-card" action="{{ route('register') }}" method="get">
+                    <div class="booking-card-top"><span>Book your ride</span><span class="live-status"><i></i> Available now</span></div>
+                    <label class="booking-field"><span>Pickup location</span><input name="pickup" type="text" placeholder="Enter pickup point"><b>⌖</b></label>
+                    <label class="booking-field"><span>Destination</span><input name="destination" type="text" placeholder="Where are you going?"><b>⌖</b></label>
+                    <div class="booking-row"><label class="booking-field"><span>When</span><select name="when"><option>Now</option><option>Later today</option><option>Tomorrow</option></select></label><label class="booking-field"><span>Passengers</span><select name="passengers"><option>1 passenger</option><option>2 passengers</option><option>3+ passengers</option></select></label></div>
+                    <button class="button booking-submit" type="submit">Find a ride <span class="arrow">↗</span></button>
+                    <p class="booking-note">No account needed to check availability.</p>
+                </form>
+                <div class="hero-stats"><span>01</span><span class="stat-line"></span><span>Mobility, reimagined</span></div>
+                <div class="hero-visual">
+                    <div class="sun-glow"></div>
+                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1600&q=85" alt="Modern vehicle on a city road">
+                    <div class="image-caption">Built for the long way home <span>↗</span></div>
+                </div>
+                <div class="social-rail" aria-label="Social links"><a href="#">in</a><a href="#">ig</a><a href="#">x</a></div>
+                <div class="scroll-note">Available across Oulu <span>↓</span></div>
+            </section>
+
+            <section id="services" class="services section-light">
+                <div class="section-kicker"><span>01 — Choose your ride</span><span>Simple fares <b>→</b></span></div>
+                <h2>Every trip starts <span>here.</span></h2>
+                <p class="section-lead">Whether you are catching a flight, heading across town, or travelling with a group, choose the ride that fits your day.</p>
+                <div class="feature-grid">
+                    <article class="feature-card feature-dark">
+                        <div class="card-top"><span>01</span><span class="mini-icon">✦</span></div>
+                        <div class="route-art"><span></span><span></span><span></span><i>↗</i></div>
+                        <div><h3>City rides.<br>Made easy.</h3><a href="#book" class="card-link">Book a local ride <span>↗</span></a></div>
+                    </article>
+                    <article class="feature-card feature-phone">
+                        <div class="card-top"><span>02</span><span class="mini-icon">◌</span></div>
+                        <div class="mini-phone"><div class="phone-notch"></div><p>Good morning, Alex</p><strong>Where to next?</strong><div class="map-lines"></div><div class="phone-search">⌕ &nbsp; Search destination</div></div>
+                        <div><h3>Airport<br>transfers.</h3><a href="#book" class="card-link">Plan an airport ride <span>↗</span></a></div>
+                    </article>
+                    <article class="feature-card feature-outline">
+                        <div class="card-top"><span>03</span><span class="mini-icon">↗</span></div>
+                        <div class="big-number">24<span>/7</span></div>
+                        <div><h3>Groups<br> welcome.</h3><a href="#book" class="card-link">Find a larger vehicle <span>↗</span></a></div>
+                    </article>
                 </div>
             </section>
-            <aside id="services" class="rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-2xl shadow-cyan-950/30">
-                <p class="text-sm font-semibold text-cyan-300">Simple booking promise</p>
-                <ol class="mt-6 space-y-6 text-slate-300">
-                    <li><strong class="block text-white">01. Share your journey</strong><span class="text-sm">Tell us where and when you need a taxi.</span></li>
-                    <li><strong class="block text-white">02. Get an estimate</strong><span class="text-sm">Choose the vehicle that fits your passengers and luggage.</span></li>
-                    <li><strong class="block text-white">03. We confirm personally</strong><span class="text-sm">Our team contacts you by phone or email before the trip.</span></li>
-                </ol>
-            </aside>
+
+            <section id="story" class="story section-dark">
+                <div class="section-kicker light"><span>02 — In their words</span><span>Our partners</span></div>
+                <h2>Less waiting.<br><em>More getting there.</em></h2>
+                <div class="testimonial-layout">
+                    <div class="client-list"><p>Popular routes</p><a class="active" href="#book">Airport → Oulu centre <span>01</span></a><a href="#book">Oulu centre → Nallikari <span>02</span></a><a href="#book">Train station → Home <span>03</span></a><a href="#book">Any destination <span>04</span></a></div>
+                    <figure class="testimonial-image" id="testimonial"><img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=85" alt="Oulu city route at dusk"><figcaption><strong>Oulu, made reachable</strong><span>Local rides / every day</span></figcaption></figure>
+                    <blockquote><div class="quote-label">[t] &nbsp; [24/7]</div><p>“From airport pickup to the last ride home, Arctic Hero gives us a dependable driver and a clear arrival time.”</p><div class="quote-label">Your journey <span>↗</span></div></blockquote>
+                </div>
+            </section>
+
+            <section id="contact" class="contact section-light">
+                <div class="contact-copy"><p class="eyebrow purple">Need a ride later?</p><h2>Book ahead.<br><span>Travel</span> easy.</h2><p>Reserve an airport transfer, a group vehicle, or your next important journey in advance.</p><p>We will confirm the details before your pickup.</p><a href="{{ route('register') }}" class="button button-purple">Book a scheduled ride <span class="arrow">↗</span></a></div>
+                <div class="large-phone"><div class="phone-top"><span>9:41</span><span>•••</span></div><div class="app-map"><span class="map-dot one"></span><span class="map-dot two"></span><span class="map-route"></span></div><div class="ride-card"><span>YOUR RIDE</span><strong>Arriving in 4 min</strong><div><span class="avatar"></span><span>Arctic Hero</span><b>›</b></div></div><div class="phone-tabs"><span>⌂</span><span>◉</span><span>♙</span></div></div>
+            </section>
         </main>
-        <footer id="contact" class="mx-auto max-w-6xl border-t border-slate-800 px-6 py-6 text-sm text-slate-400">
-            {{ config('company.name') }} · {{ config('company.email') }} · Company no. {{ config('company.company_number') }} · VAT {{ config('company.vat_number') }}
+
+        <footer class="site-footer">
+            <div class="footer-main"><div class="footer-brand"><a href="{{ url('/') }}" class="brand light-brand"><span class="brand-mark"><span></span><span></span><span></span></span><span>ARCTIC <b>HERO</b></span></a><p>Your local taxi for<br>every kind of journey.</p><div class="footer-social"><a href="#">in</a><a href="#">ig</a><a href="#">x</a></div></div>
+                <div class="footer-links"><div><p>Book</p><a href="#book">Book a ride</a><a href="#services">Ride options</a><a href="#story">How it works</a></div><div><p>Travel</p><a href="#contact">Airport transfers</a><a href="#contact">Group travel</a><a href="#contact">Business rides</a></div><div><p>Contact</p><a href="mailto:{{ config('company.email') }}">{{ config('company.email') }}</a><a href="tel:{{ config('company.phone') }}">{{ config('company.phone') }}</a><a href="#contact">Oulu, Finland</a></div></div>
+                <div class="newsletter"><p>Ride updates</p><span>Useful travel tips, never noise.</span><form><input type="email" placeholder="Your email address" aria-label="Your email address"><button type="submit">Subscribe ↗</button></form></div>
+            </div><div class="footer-bottom"><span>© {{ date('Y') }} Arctic Hero</span><span>Made for the moving world <b>✦</b></span></div>
         </footer>
-    </body>
+</body>
 </html>
