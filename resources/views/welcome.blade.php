@@ -16,9 +16,9 @@
                 <a href="#book">Book a ride</a>
                 <a href="#services">Ride options</a>
                 <a href="#story">How it works</a>
-                <a href="#locations" class="location-link">Oulu <span class="chevron">⌄</span></a>
             </nav>
             <div class="header-actions">
+                <a href="#locations" class="location-link">Oulu <span class="chevron">⌄</span></a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="text-link">Dashboard</a>
                 @else
@@ -33,6 +33,7 @@
                 <a href="#book" @click="open = false">Book a ride</a>
                 <a href="#services" @click="open = false">Ride options</a>
                 <a href="#story" @click="open = false">How it works</a>
+                <a href="#locations" @click="open = false">Oulu location</a>
                 <a href="#contact" @click="open = false">Contact us</a>
             </nav>
         </header>
@@ -46,20 +47,21 @@
                     <a href="#services" class="circle-link">See all ride options <span>↗</span></a>
                 </div>
                 <form class="booking-card" action="{{ route('register') }}" method="get">
-                    <div class="booking-card-top"><span>Book your ride</span><span class="live-status"><i></i> Available now</span></div>
+                    <div class="booking-card-top"><div><span class="booking-kicker">QUICK BOOKING</span><strong>Book your ride</strong></div><span class="live-status"><i></i> Available now</span></div>
+                    <p class="booking-subtitle">Set your route and we will match you with a local driver.</p>
                     <label class="booking-field"><span>Pickup location</span><input name="pickup" type="text" placeholder="Enter pickup point"><b>⌖</b></label>
                     <label class="booking-field"><span>Destination</span><input name="destination" type="text" placeholder="Where are you going?"><b>⌖</b></label>
                     <div class="booking-row"><label class="booking-field"><span>When</span><select name="when"><option>Now</option><option>Later today</option><option>Tomorrow</option></select></label><label class="booking-field"><span>Passengers</span><select name="passengers"><option>1 passenger</option><option>2 passengers</option><option>3+ passengers</option></select></label></div>
                     <button class="button booking-submit" type="submit">Find a ride <span class="arrow">↗</span></button>
                     <p class="booking-note">No account needed to check availability.</p>
                 </form>
-                <div class="hero-stats"><span>01</span><span class="stat-line"></span><span>Mobility, reimagined</span></div>
+                <div class="hero-stats"><span>Arctic Hero</span><span class="stat-line"></span><span>MOBILITY REIMAGINED</span></div>
                 <div class="hero-visual">
                     <div class="sun-glow"></div>
-                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1600&q=85" alt="Modern vehicle on a city road">
+                    <img src="https://cdn.prod.website-files.com/647776ba62f82e7e0cac9ae3/69e62832fd7ae0a8dcaafe11_Reg%20Page%20Banner%20(1280%20x%20720%20px).png?auto=format&fit=crop&w=1600&q=85" alt="Yellow taxi ready for a city ride">
+                    <div class="taxi-badge"><span class="badge-icon">⌖</span><div class="badge-copy"><strong>Arctic Hero — Local taxi service</strong><small>Oulu · Available 24/7</small></div></div>
                     <div class="image-caption">Built for the long way home <span>↗</span></div>
                 </div>
-                <div class="social-rail" aria-label="Social links"><a href="#">in</a><a href="#">ig</a><a href="#">x</a></div>
                 <div class="scroll-note">Available across Oulu <span>↓</span></div>
             </section>
 
