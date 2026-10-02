@@ -3,112 +3,134 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('company.name', 'Arctic Hero') }} | Move with purpose</title>
+    <title>{{ config('company.name', 'Arctic Hero') }} | Taxi rides in Oulu</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="site-shell">
         <header class="site-header" x-data="{ open: false }">
-            <a href="{{ url('/') }}" class="brand" aria-label="Arctic Hero home">
-                <span class="brand-mark"><span></span><span></span><span></span></span>
-                <span>ARCTIC <b>HERO</b></span>
-            </a>
-            <nav class="desktop-nav" aria-label="Main navigation">
-                <a href="#book">Book a ride</a>
-                <a href="#services">Ride options</a>
-                <a href="#story">How it works</a>
-            </nav>
-            <div class="header-actions">
-                <a href="#locations" class="location-link">Oulu <span class="chevron">⌄</span></a>
-                @auth
-                    <a href="{{ route('dashboard') }}" class="text-link">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="text-link">Log in</a>
-                @endauth
-                <a href="#book" class="button button-small">Book a ride <span class="arrow">↗</span></a>
+            <div class="utility-bar">
+                <div class="utility-inner">
+                    <div class="utility-contact"><a href="tel:{{ config('company.phone') }}">{{ config('company.phone') }}</a><a href="mailto:{{ config('company.email') }}">{{ config('company.email') }}</a></div>
+                    <div class="utility-social"><span>OULU, FINLAND</span><span>CITY · AIRPORT · GROUP</span></div>
+                </div>
             </div>
-            <button type="button" class="menu-toggle" @click="open = !open" :aria-expanded="open.toString()" aria-label="Toggle navigation">
-                <span></span><span></span>
-            </button>
-            <nav x-cloak x-show="open" class="mobile-nav" aria-label="Mobile navigation">
-                <a href="#book" @click="open = false">Book a ride</a>
-                <a href="#services" @click="open = false">Ride options</a>
-                <a href="#story" @click="open = false">How it works</a>
-                <a href="#locations" @click="open = false">Oulu location</a>
-                <a href="#contact" @click="open = false">Contact us</a>
-            </nav>
+            <div class="header-inner">
+                <a href="{{ url('/') }}" class="brand" aria-label="Arctic Hero home"><span class="brand-mark"></span><span>ARCTIC <b>HERO</b></span></a>
+                <nav class="desktop-nav" aria-label="Main navigation">
+                    <a href="#services">Services</a>
+                    <a href="#fleet">Our fleet</a>
+                    <a href="#locations">Oulu routes</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                <div class="header-actions">
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="text-link">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="text-link">Log in</a>
+                    @endauth
+                    <a href="#book" class="button button-small">Book a taxi <span class="arrow">↗</span></a>
+                </div>
+                <button type="button" class="menu-toggle" @click="open = !open" :aria-expanded="open.toString()" aria-label="Toggle navigation"><span></span><span></span></button>
+                <nav x-cloak x-show="open" class="mobile-nav" aria-label="Mobile navigation">
+                    <a href="#services" @click="open = false">Services</a><a href="#fleet" @click="open = false">Our fleet</a><a href="#locations" @click="open = false">Oulu routes</a><a href="#contact" @click="open = false">Contact</a>
+                </nav>
+            </div>
         </header>
 
         <main>
-            <section id="book" class="hero section-dark">
+            <section id="home" class="hero">
                 <div class="hero-copy">
-                    <p class="eyebrow">Your ride, your way <span>Oulu, Finland</span></p>
-                    <h1>Where to<br><em>next?</em></h1>
-                    <p class="hero-intro">Reliable local rides, airport transfers, and group travel. Tell us where you are going and we will take care of the rest.</p>
-                    <a href="#services" class="circle-link">See all ride options <span>↗</span></a>
+                    <p class="eyebrow">Your local taxi <span>Oulu, Finland</span></p>
+                    <h1>Oulu rides.<br><span>Made simple.</span></h1>
+                    <p class="hero-intro">City pickups, airport transfers and room for the whole family. Let’s get you where you need to be.</p>
+                    <div class="hero-actions"><a href="#book" class="button">Book your taxi <span class="arrow">↗</span></a><a href="#services" class="hero-secondary">Explore our services</a></div>
+                </div>
+                <figure class="hero-visual"><img src="/images/taxi-city.jpg" alt="Yellow taxis travelling through a city street" fetchpriority="high"></figure>
+                <div class="hero-caption">Local journeys · Oulu and nearby</div>
+            </section>
+
+            <section id="services" class="services">
+                <div class="section-wrap">
+                    <div class="section-kicker"><span>Move through Oulu</span><strong>Ride options</strong></div>
+                    <h2>For every kind of trip.</h2>
+                    <p class="section-lead">A quick trip across town or a planned ride to the airport. Choose a service that fits your day.</p>
+                    <div class="service-grid">
+                        <article class="service-card"><div class="service-photo"><img src="/images/taxi-city.jpg" alt="Taxi ready for a city journey" loading="lazy"></div><div><h3>City journeys</h3><p>Everyday rides around Oulu, from the first pickup to the last stop.</p></div></article>
+                        <article class="service-card"><div class="service-photo"><img src="/images/taxi-navigation.jpg" alt="Taxi driver navigating a city route" loading="lazy"></div><div><h3>Airport transfers</h3><p>Plan a pickup for Oulu Airport and travel with your bags in good hands.</p></div></article>
+                        <article class="service-card"><div class="service-photo"><img src="/images/northern-road.jpg" alt="A winter road through northern Finland" loading="lazy"></div><div><h3>Group rides</h3><p>Choose a minivan for family trips and journeys with extra luggage.</p></div></article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="company-section">
+                <div class="company-collage" aria-label="Oulu city and a taxi driver">
+                    <figure class="company-main-photo"><img src="/images/coastal-journey.jpg" alt="Oulu waterfront and city buildings" loading="lazy"></figure>
+                    <figure class="company-detail-photo"><img src="/images/taxi-navigation.jpg" alt="Taxi driver following a route" loading="lazy"></figure>
+                </div>
+                <div class="company-copy">
+                    <p class="section-kicker">Welcome to Arctic Hero</p>
+                    <h2>A local ride.<br><span>A little less to think about.</span></h2>
+                    <p>We make everyday travel around Oulu easier to plan. Set your pickup, choose the ride that suits your passengers, and share where you’re headed.</p>
+                    <ul class="check-list"><li>Local city and airport journeys</li><li>Vehicle options for up to seven passengers</li><li>Pickup time and passenger details in one request</li></ul>
+                    <div class="company-contact"><div><span>Call us to plan a trip</span><strong>{{ config('company.phone') }}</strong></div><a href="tel:{{ config('company.phone') }}" class="button">Call Arctic Hero <span class="arrow">↗</span></a></div>
+                </div>
+            </section>
+
+            <section id="fleet" class="fleet">
+                <div class="section-wrap">
+                    <div class="fleet-heading">
+                        <p class="section-kicker">Choose a vehicle</p>
+                        <h2>Room for your ride.</h2>
+                        <p>Choose from a standard taxi, premium car or minivan, with room for up to seven passengers.</p>
+                    </div>
+                    <div class="fleet-grid">
+                        <article class="fleet-card"><span class="fleet-tag">Everyday</span><h3>Standard Taxi</h3><p class="fleet-description">Comfortable transport for daily trips around town.</p><div class="fleet-details"><span>Passengers<strong>Up to 4</strong></span><span>Luggage<strong>2 bags</strong></span></div><a href="#book" class="button">Book this ride <span class="arrow">↗</span></a></article>
+                        <article class="fleet-card featured"><span class="fleet-tag">Extra comfort</span><h3>Premium Taxi</h3><p class="fleet-description">A quiet, spacious option for business and airport travel.</p><div class="fleet-details"><span>Passengers<strong>Up to 4</strong></span><span>Luggage<strong>3 bags</strong></span></div><a href="#book" class="button">Book this ride <span class="arrow">↗</span></a></article>
+                        <article class="fleet-card"><span class="fleet-tag">More room</span><h3>Minivan</h3><p class="fleet-description">Practical space for family and group journeys.</p><div class="fleet-details"><span>Passengers<strong>Up to 7</strong></span><span>Luggage<strong>5 bags</strong></span></div><a href="#book" class="button">Book this ride <span class="arrow">↗</span></a></article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="book" class="booking-section">
+                <div class="booking-promo">
+                    <img src="/images/taxi-night.jpg" alt="Yellow taxi ready at the curb" loading="lazy">
+                    <div class="booking-promo-copy"><p class="booking-kicker">Your next trip starts here</p><h2>Book your<br>Oulu taxi.</h2><p>Share a few details and continue to registration to send your ride request.</p></div>
                 </div>
                 <form class="booking-card" action="{{ route('register') }}" method="get">
-                    <div class="booking-card-top"><div><span class="booking-kicker">QUICK BOOKING</span><strong>Book your ride</strong></div><span class="live-status"><i></i> Available now</span></div>
-                    <p class="booking-subtitle">Set your route and we will match you with a local driver.</p>
+                    <div class="booking-card-top"><div><span class="booking-kicker">Plan your trip</span><strong>Where to?</strong></div></div>
+                    <p class="booking-subtitle">Add your route and pickup details.</p>
                     <label class="booking-field"><span>Pickup location</span><input name="pickup" type="text" placeholder="Enter pickup point"><b>⌖</b></label>
                     <label class="booking-field"><span>Destination</span><input name="destination" type="text" placeholder="Where are you going?"><b>⌖</b></label>
-                    <div class="booking-row"><label class="booking-field"><span>When</span><select name="when"><option>Now</option><option>Later today</option><option>Tomorrow</option></select></label><label class="booking-field"><span>Passengers</span><select name="passengers"><option>1 passenger</option><option>2 passengers</option><option>3+ passengers</option></select></label></div>
-                    <button class="button booking-submit" type="submit">Find a ride <span class="arrow">↗</span></button>
-                    <p class="booking-note">No account needed to check availability.</p>
+                    <div class="booking-row"><label class="booking-field"><span>When</span><select name="when"><option>Now</option><option>Later today</option><option>Tomorrow</option></select></label><label class="booking-field"><span>Passengers</span><select name="passengers"><option>1 passenger</option><option>2 passengers</option><option>3+ passengers</option><option>Up to 7 passengers</option></select></label></div>
+                    <button class="button booking-submit" type="submit">Continue to registration <span class="arrow">↗</span></button>
+                    <p class="booking-note">Register to continue with your ride request.</p>
                 </form>
-                <div class="hero-stats"><span>Arctic Hero</span><span class="stat-line"></span><span>MOBILITY REIMAGINED</span></div>
-                <div class="hero-visual">
-                    <div class="sun-glow"></div>
-                    <img src="https://cdn.prod.website-files.com/647776ba62f82e7e0cac9ae3/69e62832fd7ae0a8dcaafe11_Reg%20Page%20Banner%20(1280%20x%20720%20px).png?auto=format&fit=crop&w=1600&q=85" alt="Yellow taxi ready for a city ride">
-                    <div class="taxi-badge"><span class="badge-icon">⌖</span><div class="badge-copy"><strong>Arctic Hero — Local taxi service</strong><small>Oulu · Available 24/7</small></div></div>
-                    <div class="image-caption">Built for the long way home <span>↗</span></div>
-                </div>
-                <div class="scroll-note">Available across Oulu <span>↓</span></div>
             </section>
 
-            <section id="services" class="services section-light">
-                <div class="section-kicker"><span>01 — Choose your ride</span><span>Simple fares <b>→</b></span></div>
-                <h2>Every trip starts <span>here.</span></h2>
-                <p class="section-lead">Whether you are catching a flight, heading across town, or travelling with a group, choose the ride that fits your day.</p>
-                <div class="feature-grid">
-                    <article class="feature-card feature-dark">
-                        <div class="card-top"><span>01</span><span class="mini-icon">✦</span></div>
-                        <div class="route-art"><span></span><span></span><span></span><i>↗</i></div>
-                        <div><h3>City rides.<br>Made easy.</h3><a href="#book" class="card-link">Book a local ride <span>↗</span></a></div>
-                    </article>
-                    <article class="feature-card feature-phone">
-                        <div class="card-top"><span>02</span><span class="mini-icon">◌</span></div>
-                        <div class="mini-phone"><div class="phone-notch"></div><p>Good morning, Alex</p><strong>Where to next?</strong><div class="map-lines"></div><div class="phone-search">⌕ &nbsp; Search destination</div></div>
-                        <div><h3>Airport<br>transfers.</h3><a href="#book" class="card-link">Plan an airport ride <span>↗</span></a></div>
-                    </article>
-                    <article class="feature-card feature-outline">
-                        <div class="card-top"><span>03</span><span class="mini-icon">↗</span></div>
-                        <div class="big-number">24<span>/7</span></div>
-                        <div><h3>Groups<br> welcome.</h3><a href="#book" class="card-link">Find a larger vehicle <span>↗</span></a></div>
-                    </article>
+            <section id="locations" class="locations">
+                <div class="locations-copy">
+                    <p class="section-kicker">Our service area</p>
+                    <h2>Oulu is home.<br>We know the way.</h2>
+                    <p>Book a ride across the city, to the airport or from the railway station. Add your pickup and destination, then choose the time and passenger count that fit your plans.</p>
+                    <ul class="route-list"><li>Oulu city centre</li><li>Oulu Airport</li><li>Railway station</li><li>Neighbourhood pickups</li></ul>
+                    <a href="#book" class="card-link">Plan your route <span>↗</span></a>
                 </div>
+                <figure class="location-photo"><img src="/images/coastal-journey.jpg" alt="Aerial view of Oulu and its waterfront" loading="lazy"><figcaption>Oulu, Finland</figcaption></figure>
             </section>
 
-            <section id="story" class="story section-dark">
-                <div class="section-kicker light"><span>02 — In their words</span><span>Our partners</span></div>
-                <h2>Less waiting.<br><em>More getting there.</em></h2>
-                <div class="testimonial-layout">
-                    <div class="client-list"><p>Popular routes</p><a class="active" href="#book">Airport → Oulu centre <span>01</span></a><a href="#book">Oulu centre → Nallikari <span>02</span></a><a href="#book">Train station → Home <span>03</span></a><a href="#book">Any destination <span>04</span></a></div>
-                    <figure class="testimonial-image" id="testimonial"><img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=85" alt="Oulu city route at dusk"><figcaption><strong>Oulu, made reachable</strong><span>Local rides / every day</span></figcaption></figure>
-                    <blockquote><div class="quote-label">[t] &nbsp; [24/7]</div><p>“From airport pickup to the last ride home, Arctic Hero gives us a dependable driver and a clear arrival time.”</p><div class="quote-label">Your journey <span>↗</span></div></blockquote>
-                </div>
-            </section>
-
-            <section id="contact" class="contact section-light">
-                <div class="contact-copy"><p class="eyebrow purple">Need a ride later?</p><h2>Book ahead.<br><span>Travel</span> easy.</h2><p>Reserve an airport transfer, a group vehicle, or your next important journey in advance.</p><p>We will confirm the details before your pickup.</p><a href="{{ route('register') }}" class="button button-purple">Book a scheduled ride <span class="arrow">↗</span></a></div>
-                <div class="large-phone"><div class="phone-top"><span>9:41</span><span>•••</span></div><div class="app-map"><span class="map-dot one"></span><span class="map-dot two"></span><span class="map-route"></span></div><div class="ride-card"><span>YOUR RIDE</span><strong>Arriving in 4 min</strong><div><span class="avatar"></span><span>Arctic Hero</span><b>›</b></div></div><div class="phone-tabs"><span>⌂</span><span>◉</span><span>♙</span></div></div>
+            <section id="contact" class="contact-band">
+                <div><h2>Going somewhere?</h2><p>Plan a local ride, airport transfer or group trip with Arctic Hero.</p></div>
+                <a href="#book" class="button">Start a booking <span class="arrow">↗</span></a>
             </section>
         </main>
 
         <footer class="site-footer">
-            <div class="footer-main"><div class="footer-brand"><a href="{{ url('/') }}" class="brand light-brand"><span class="brand-mark"><span></span><span></span><span></span></span><span>ARCTIC <b>HERO</b></span></a><p>Your local taxi for<br>every kind of journey.</p><div class="footer-social"><a href="#">in</a><a href="#">ig</a><a href="#">x</a></div></div>
-                <div class="footer-links"><div><p>Book</p><a href="#book">Book a ride</a><a href="#services">Ride options</a><a href="#story">How it works</a></div><div><p>Travel</p><a href="#contact">Airport transfers</a><a href="#contact">Group travel</a><a href="#contact">Business rides</a></div><div><p>Contact</p><a href="mailto:{{ config('company.email') }}">{{ config('company.email') }}</a><a href="tel:{{ config('company.phone') }}">{{ config('company.phone') }}</a><a href="#contact">Oulu, Finland</a></div></div>
-                <div class="newsletter"><p>Ride updates</p><span>Useful travel tips, never noise.</span><form><input type="email" placeholder="Your email address" aria-label="Your email address"><button type="submit">Subscribe ↗</button></form></div>
-            </div><div class="footer-bottom"><span>© {{ date('Y') }} Arctic Hero</span><span>Made for the moving world <b>✦</b></span></div>
+            <div class="footer-main">
+                <div class="footer-brand"><a href="{{ url('/') }}" class="brand light-brand"><span class="brand-mark"></span><span>ARCTIC <b>HERO</b></span></a><p>Your local taxi for city trips, airport runs and journeys around Oulu.</p></div>
+                <div class="footer-links"><div><p>Explore</p><a href="#services">Ride options</a><a href="#fleet">Our fleet</a><a href="#locations">Oulu routes</a></div><div><p>Book</p><a href="#book">Start a booking</a><a href="#fleet">Vehicle choices</a><a href="#contact">Contact</a></div><div><p>Contact</p><a href="mailto:{{ config('company.email') }}">{{ config('company.email') }}</a><a href="tel:{{ config('company.phone') }}">{{ config('company.phone') }}</a><a href="#locations">Oulu, Finland</a></div></div>
+                <div class="newsletter"><p>Need help planning?</p><span>Talk with our team about your next ride.</span><a class="footer-contact-link" href="mailto:{{ config('company.email') }}">Email Arctic Hero ↗</a></div>
+            </div>
+            <div class="footer-bottom"><span>© {{ date('Y') }} Arctic Hero</span><span>Oulu, Finland</span></div>
         </footer>
 </body>
 </html>
