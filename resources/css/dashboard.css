@@ -1,0 +1,119 @@
+.customer-app { min-height: 100vh; background: #f1f1ef; color: #171714; }
+.customer-nav { position: relative; z-index: 10; background: #11110f; color: white; }
+.customer-nav-inner { position: relative; display: flex; width: min(100% - 10%, 1220px); min-height: 72px; align-items: center; gap: 30px; margin: 0 auto; }
+.customer-brand { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 9px; color: white; font: 700 12px 'DM Sans', sans-serif; letter-spacing: .08em; text-decoration: none; }
+.customer-brand b { color: #f5df00; }
+.customer-brand-mark { display: grid; width: 29px; height: 29px; place-items: center; border: 2px solid #f5df00; border-radius: 50%; color: #f5df00; font: 700 16px 'Barlow Condensed', sans-serif; }
+.customer-nav-links { display: flex; align-items: center; gap: 25px; margin: 0 auto; }
+.customer-nav-links a { color: rgba(255,255,255,.72); font: 500 12px 'DM Sans', sans-serif; text-decoration: none; }
+.customer-nav-links a:hover, .customer-nav-links a.is-active { color: #f5df00; }
+.customer-nav-actions { display: flex; align-items: center; gap: 15px; }
+.customer-profile { display: inline-flex; align-items: center; gap: 9px; color: rgba(255,255,255,.84); font-size: 11px; text-decoration: none; }
+.customer-profile span { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 50%; background: #f5df00; color: #11110f; font-weight: 700; text-transform: uppercase; }
+.customer-nav-actions form button, .customer-mobile-nav form button { min-height: 34px; padding: 0 12px; border: 1px solid rgba(255,255,255,.3); border-radius: 0; background: transparent; color: white; font: 600 11px 'DM Sans', sans-serif; cursor: pointer; }
+.customer-nav-actions form button:hover, .customer-mobile-nav form button:hover { border-color: #f5df00; color: #f5df00; }
+.customer-menu-toggle, .customer-mobile-nav { display: none; }
+
+.dashboard-page { min-height: calc(100vh - 72px); padding: 43px 5% 64px; }
+.dashboard-wrap { width: min(100%, 1160px); margin: 0 auto; }
+.dashboard-welcome { position: relative; display: flex; min-height: 190px; align-items: center; justify-content: space-between; gap: 25px; overflow: hidden; padding: 31px 36px; background: #18313a; color: white; }
+.dashboard-welcome:after { position: absolute; top: -40%; right: 11%; width: 155px; height: 190%; content: ''; background: #f5df00; clip-path: polygon(65% 0, 100% 0, 35% 100%, 0 100%); opacity: .95; }
+.dashboard-welcome > div, .dashboard-welcome > a { position: relative; z-index: 1; }
+.dashboard-eyebrow { margin: 0 0 9px; color: #726900; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.dashboard-welcome .dashboard-eyebrow { color: #f5df00; }
+.dashboard-welcome .dashboard-eyebrow span { margin-left: 8px; color: rgba(255,255,255,.64); }
+.dashboard-welcome h1 { margin: 0 0 7px; font: 600 45px/.98 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.dashboard-welcome > div > p:last-child { margin: 0; color: rgba(255,255,255,.74); font-size: 13px; }
+.dashboard-primary { display: inline-flex; min-height: 42px; align-items: center; justify-content: center; gap: 15px; padding: 0 16px; background: #f5df00; color: #11110f; font-size: 11px; font-weight: 700; text-decoration: none; }
+.dashboard-primary:hover { background: #fff078; }
+.dashboard-primary span { font-size: 15px; }
+.dashboard-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 16px 0 24px; border: 1px solid #deded8; background: white; }
+.dashboard-metrics article { display: flex; min-height: 89px; align-items: center; justify-content: space-between; gap: 15px; padding: 17px 21px; border-right: 1px solid #deded8; }
+.dashboard-metrics article:last-child { border-right: 0; }
+.dashboard-metrics span { color: #696962; font-size: 12px; }
+.dashboard-metrics strong { font: 600 31px/1 'Barlow Condensed', sans-serif; }
+.dashboard-content { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, .8fr); align-items: start; gap: 18px; }
+.dashboard-trips, .dashboard-account { border: 1px solid #deded8; background: white; }
+.dashboard-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 20px 21px 16px; border-bottom: 1px solid #e6e6e1; }
+.dashboard-section-heading .dashboard-eyebrow { margin-bottom: 5px; }
+.dashboard-section-heading h2 { margin: 0; font: 600 26px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.dashboard-section-heading > a { color: #171714; font-size: 11px; font-weight: 700; text-decoration: underline; text-decoration-color: #b9aa00; text-underline-offset: 4px; }
+.dashboard-bookings { padding: 0 21px; }
+.dashboard-booking { display: grid; grid-template-columns: 54px minmax(0, 1fr) minmax(95px, auto); align-items: center; gap: 14px; padding: 17px 0; border-bottom: 1px solid #e8e8e3; }
+.dashboard-booking:last-child { border-bottom: 0; }
+.dashboard-date { display: flex; width: 50px; min-height: 57px; flex-direction: column; align-items: center; justify-content: center; background: #fff9b8; color: #171714; text-decoration: none; }
+.dashboard-date span { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.dashboard-date strong { margin-top: 2px; font: 600 24px/.9 'Barlow Condensed', sans-serif; }
+.dashboard-route { min-width: 0; }
+.dashboard-route p { margin: 0 0 6px; color: #171714; font-size: 12px; font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
+.dashboard-route p span { margin: 0 3px; color: #807600; }
+.dashboard-route > span { color: #73736c; font-size: 10px; }
+.dashboard-booking-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.dashboard-status { padding: 4px 6px; background: #f2f1eb; color: #5f5c00; font-size: 9px; font-weight: 700; }
+.dashboard-status[data-status="confirmed"] { background: #edf4e8; color: #436536; }
+.dashboard-status[data-status="rejected"], .dashboard-status[data-status="cancelled"] { background: #f8e8e5; color: #913a2a; }
+.dashboard-booking-meta strong { font-size: 12px; }
+.dashboard-booking-meta small { color: #77776f; font-size: 9px; }
+.dashboard-empty { padding: 32px 22px 35px; text-align: center; }
+.dashboard-empty-mark { display: grid; width: 41px; height: 41px; place-items: center; margin: 0 auto 12px; border: 1px solid #d7c600; border-radius: 50%; color: #726900; font: 700 20px 'Barlow Condensed', sans-serif; }
+.dashboard-empty h3 { margin: 0 0 6px; font: 600 22px 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.dashboard-empty p { margin: 0 0 18px; color: #6b6b64; font-size: 12px; line-height: 1.55; }
+.dashboard-account dl { margin: 0; padding: 8px 21px 16px; }
+.dashboard-account dl > div { padding: 11px 0; border-bottom: 1px solid #e8e8e3; }
+.dashboard-account dt { margin-bottom: 4px; color: #73736c; font-size: 10px; }
+.dashboard-account dd { margin: 0; color: #171714; font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
+.dashboard-account-link { display: block; margin: 0 21px; padding: 11px 0; border-bottom: 1px solid #e8e8e3; color: #171714; font-size: 11px; font-weight: 700; text-decoration: underline; text-decoration-color: #b9aa00; text-underline-offset: 4px; }
+.dashboard-help { display: flex; flex-direction: column; gap: 5px; padding: 16px 21px 18px; }
+.dashboard-help span { color: #73736c; font-size: 10px; }
+.dashboard-help a { color: #171714; font-size: 12px; font-weight: 700; text-decoration: none; }
+.dashboard-help a:hover { color: #807600; }
+.customer-app :focus-visible { outline: 2px solid #8c8100; outline-offset: 3px; }
+
+@media (max-width: 900px) {
+    .customer-nav-inner { width: 92%; gap: 17px; }
+    .customer-nav-links { gap: 15px; }
+    .dashboard-page { padding-right: 4%; padding-left: 4%; }
+    .dashboard-content { grid-template-columns: minmax(0, 1.3fr) minmax(240px, .8fr); }
+    .dashboard-welcome h1 { font-size: 39px; }
+}
+
+@media (max-width: 640px) {
+    .customer-nav-inner { width: 92%; min-height: 64px; gap: 10px; }
+    .customer-brand { font-size: 11px; }
+    .customer-brand-mark { width: 26px; height: 26px; }
+    .customer-nav-links, .customer-nav-actions { display: none; }
+    .customer-menu-toggle { display: flex; width: 36px; height: 36px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-left: auto; border: 1px solid rgba(255,255,255,.45); background: transparent; }
+    .customer-menu-toggle span { width: 14px; height: 1px; background: #f5df00; }
+    .customer-mobile-nav { position: absolute; top: 64px; right: 4%; left: 4%; display: flex; flex-direction: column; padding: 8px 14px; border-top: 2px solid #f5df00; background: #11110f; }
+    .customer-mobile-nav a { padding: 11px 2px; border-bottom: 1px solid rgba(255,255,255,.14); color: white; font-size: 12px; text-decoration: none; }
+    .customer-mobile-nav form { padding-top: 10px; }
+    .customer-mobile-nav form button { width: 100%; min-height: 38px; border-color: #f5df00; color: #f5df00; }
+    .dashboard-page { padding: 23px 4% 40px; }
+    .dashboard-welcome { min-height: 0; align-items: flex-start; flex-direction: column; padding: 24px 20px; }
+    .dashboard-welcome:after { right: 4%; width: 19%; }
+    .dashboard-welcome h1 { font-size: 38px; }
+    .dashboard-welcome > div > p:last-child { max-width: 240px; font-size: 12px; line-height: 1.5; }
+    .dashboard-welcome .dashboard-primary { margin-top: 3px; }
+    .dashboard-metrics { margin: 12px 0 16px; }
+    .dashboard-metrics article { min-height: 72px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6px; padding: 10px; }
+    .dashboard-metrics span { font-size: 10px; line-height: 1.2; }
+    .dashboard-metrics strong { font-size: 25px; }
+    .dashboard-content { grid-template-columns: 1fr; gap: 13px; }
+    .dashboard-section-heading { padding: 17px 15px 14px; }
+    .dashboard-section-heading h2 { font-size: 23px; }
+    .dashboard-bookings { padding: 0 13px; }
+    .dashboard-booking { grid-template-columns: 47px minmax(0, 1fr); gap: 10px; padding: 14px 0; }
+    .dashboard-date { width: 44px; min-height: 51px; }
+    .dashboard-route p { font-size: 11px; }
+    .dashboard-booking-meta { grid-column: 2; flex-direction: row; align-items: center; justify-content: flex-start; gap: 9px; }
+    .dashboard-account dl { padding-right: 15px; padding-left: 15px; }
+    .dashboard-account-link { margin-right: 15px; margin-left: 15px; }
+    .dashboard-help { padding-right: 15px; padding-left: 15px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .dashboard-welcome, .dashboard-metrics, .dashboard-content { animation: dashboard-enter .45s ease both; }
+    .dashboard-metrics { animation-delay: 60ms; }
+    .dashboard-content { animation-delay: 110ms; }
+}
+@keyframes dashboard-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

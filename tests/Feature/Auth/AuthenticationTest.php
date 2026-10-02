@@ -14,7 +14,9 @@ class AuthenticationTest extends TestCase
     {
         $response = $this->get('/login');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertSee('action="/login"', false)
+            ->assertSee('name="_token"', false);
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void
@@ -28,6 +30,9 @@ class AuthenticationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));
+
+        $firstName = explode(' ', trim($user->name))[0];
+        $this->get(route('dashboard'))->assertOk()->assertSeeText("Welcome back, {$firstName}");
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
