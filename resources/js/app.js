@@ -1,5 +1,6 @@
 import './bootstrap';
 import '../css/homepage-taxi.css';
+import '../css/auth.css';
 
 import Alpine from 'alpinejs';
 
