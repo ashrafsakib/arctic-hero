@@ -266,3 +266,57 @@ body { margin: 0; color: var(--ink); font-family: var(--sans); }
     *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
     .reveal { opacity: 1; transform: none; }
 }
+
+.utility-inner { font-size: 11px; }
+.utility-social { font-size: 10px; }
+.desktop-nav a, .text-link, .location-link { font-size: 12px; }
+.button { font-size: 12px; }
+.button-small { font-size: 11px; }
+.eyebrow, .section-kicker, .booking-kicker, .detail-label, .utility-label { font-size: 10px; }
+.hero-intro { font-size: 15px; }
+.hero-secondary { font-size: 12px; }
+.hero-caption { font-size: 10px; }
+.section-lead { font-size: 14px; }
+.service-card h3 { font-size: 16px; }
+.service-card p { font-size: 12px; }
+.company-copy > p:not(.section-kicker) { font-size: 14px; }
+.check-list li { font-size: 13px; }
+.company-contact span { font-size: 11px; }
+.fleet-tag { font-size: 10px; }
+.fleet-description { font-size: 12px; }
+.fleet-details span { font-size: 11px; }
+.fleet-details strong { font-size: 12px; }
+.fleet-card .button { font-size: 11px; }
+.fleet-heading p { font-size: 12px; }
+.booking-promo p { font-size: 13px; }
+.booking-subtitle { font-size: 12px; }
+.live-status { font-size: 11px; }
+.booking-field > span { font-size: 10px; }
+.booking-field input, .booking-field select { font-size: 13px; }
+.booking-note { font-size: 10px; }
+.locations-copy > p:not(.section-kicker) { font-size: 14px; }
+.route-list li { font-size: 12px; }
+.location-photo figcaption { font-size: 10px; }
+.contact-band p { font-size: 12px; }
+.footer-brand p { font-size: 12px; }
+.footer-links p, .newsletter p { font-size: 10px; }
+.footer-links a { font-size: 12px; }
+.footer-contact-link, .newsletter > span { font-size: 11px; }
+.newsletter input { font-size: 12px; }
+.newsletter button { font-size: 10px; }
+.footer-bottom { font-size: 10px; }
+
+@media (max-width: 640px) {
+    .utility-inner { font-size: 10px; }
+    .button-small { font-size: 10px; }
+    .hero .eyebrow, .section-kicker { font-size: 10px; }
+    .hero-intro { font-size: 14px; }
+    .hero-caption { font-size: 9px; }
+    .service-card h3 { font-size: 15px; }
+    .service-card p { font-size: 12px; }
+    .fleet-heading p, .fleet-description { font-size: 12px; }
+    .booking-field input, .booking-field select { font-size: 12px; }
+    .locations-copy > p:not(.section-kicker) { font-size: 13px; }
+    .route-list li { font-size: 11px; }
+    .footer-links a { font-size: 12px; }
+}
