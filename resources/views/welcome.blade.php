@@ -96,14 +96,14 @@
                     <img src="/images/taxi-night.jpg" alt="Yellow taxi ready at the curb" loading="lazy">
                     <div class="booking-promo-copy"><p class="booking-kicker">Your next trip starts here</p><h2>Book your<br>Oulu taxi.</h2><p>Share a few details and continue to registration to send your ride request.</p></div>
                 </div>
-                <form class="booking-card" action="{{ route('register') }}" method="get">
+                <form class="booking-card" action="{{ route('booking.create') }}" method="get">
                     <div class="booking-card-top"><div><span class="booking-kicker">Plan your trip</span><strong>Where to?</strong></div></div>
                     <p class="booking-subtitle">Add your route and pickup details.</p>
-                    <label class="booking-field"><span>Pickup location</span><input name="pickup" type="text" placeholder="Enter pickup point"><b>⌖</b></label>
-                    <label class="booking-field"><span>Destination</span><input name="destination" type="text" placeholder="Where are you going?"><b>⌖</b></label>
-                    <div class="booking-row"><label class="booking-field"><span>When</span><select name="when"><option>Now</option><option>Later today</option><option>Tomorrow</option></select></label><label class="booking-field"><span>Passengers</span><select name="passengers"><option>1 passenger</option><option>2 passengers</option><option>3+ passengers</option><option>Up to 7 passengers</option></select></label></div>
-                    <button class="button booking-submit" type="submit">Continue to registration <span class="arrow">↗</span></button>
-                    <p class="booking-note">Register to continue with your ride request.</p>
+                    <label class="booking-field"><span>Pickup location</span><input name="pickup_address" type="text" placeholder="Enter pickup point"><b>⌖</b></label>
+                    <label class="booking-field"><span>Destination</span><input name="destination_address" type="text" placeholder="Where are you going?"><b>⌖</b></label>
+                    <div class="booking-row"><label class="booking-field"><span>Pickup date</span><input name="booking_date" type="date" value="{{ today()->toDateString() }}" min="{{ today()->toDateString() }}"></label><label class="booking-field"><span>Passengers</span><select name="passengers">@for ($passengers = 1; $passengers <= 7; $passengers++)<option value="{{ $passengers }}">{{ $passengers }} {{ $passengers === 1 ? 'passenger' : 'passengers' }}</option>@endfor</select></label></div>
+                    <button class="button booking-submit" type="submit">Plan your ride <span class="arrow">↗</span></button>
+                    <p class="booking-note">Add your route, choose a vehicle and review your fare.</p>
                 </form>
             </section>
 

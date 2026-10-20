@@ -2,12 +2,18 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\BookingController;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
+Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::get('/booking/complete', [BookingController::class, 'complete'])->middleware('auth')->name('booking.complete');
+Route::get('/booking/{booking}/confirmation', [BookingController::class, 'confirmation'])->middleware('auth')->name('booking.confirmation');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
