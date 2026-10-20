@@ -19,6 +19,7 @@
                 <nav class="desktop-nav" aria-label="Main navigation">
                     <a href="#services">Services</a>
                     <a href="#fleet">Our fleet</a>
+                    <a href="{{ route('booking.create') }}">Book a ride</a>
                     <a href="#locations">Oulu routes</a>
                     <a href="#contact">Contact</a>
                 </nav>
@@ -28,11 +29,11 @@
                     @else
                         <a href="{{ route('login') }}" class="text-link">Log in</a>
                     @endauth
-                    <a href="#book" class="button button-small">Book a taxi <span class="arrow">↗</span></a>
+                    <a href="{{ route('booking.create') }}" class="button button-small">Book a taxi <span class="arrow">↗</span></a>
                 </div>
                 <button type="button" class="menu-toggle" @click="open = !open" :aria-expanded="open.toString()" aria-label="Toggle navigation"><span></span><span></span></button>
                 <nav x-cloak x-show="open" class="mobile-nav" aria-label="Mobile navigation">
-                    <a href="#services" @click="open = false">Services</a><a href="#fleet" @click="open = false">Our fleet</a><a href="#locations" @click="open = false">Oulu routes</a><a href="#contact" @click="open = false">Contact</a>
+                    <a href="#services" @click="open = false">Services</a><a href="#fleet" @click="open = false">Our fleet</a><a href="{{ route('booking.create') }}" @click="open = false">Book a ride</a><a href="#locations" @click="open = false">Oulu routes</a><a href="#contact" @click="open = false">Contact</a>
                 </nav>
             </div>
         </header>
