@@ -72,7 +72,7 @@
                     <div class="booking-vehicle-list">
                         @foreach ($vehicleTypes as $vehicleType)
                             <label class="booking-vehicle" data-vehicle-option>
-                                <input type="radio" name="vehicle_type_id" value="{{ $vehicleType->id }}" @checked(old('vehicle_type_id', $vehicleTypes->first()?->id) == $vehicleType->id)>
+                                <input type="radio" name="vehicle_type_id" value="{{ $vehicleType->id }}" @checked(old('vehicle_type_id', $selectedVehicleTypeId ?: $vehicleTypes->first()?->id) == $vehicleType->id)>
                                 <span class="booking-vehicle-icon" aria-hidden="true">{{ $vehicleType->passenger_capacity > 4 ? 'VAN' : ($vehicleType->base_fare > 10 ? 'PRO' : 'TAXI') }}</span>
                                 <span class="booking-vehicle-copy"><strong>{{ $vehicleType->name }}</strong><small>{{ $vehicleType->description }}</small><small>Up to {{ $vehicleType->passenger_capacity }} passengers · {{ $vehicleType->luggage_capacity }} bags</small></span>
                                 <span class="booking-vehicle-rate"><strong>€{{ number_format((float) $vehicleType->base_fare, 2) }}</strong><small>base fare</small></span>

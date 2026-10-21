@@ -3,6 +3,7 @@ import '../css/homepage-taxi.css';
 import '../css/auth.css';
 import '../css/dashboard.css';
 import '../css/booking.css';
+import '../css/fleet-page.css';
 
 import Alpine from 'alpinejs';
 

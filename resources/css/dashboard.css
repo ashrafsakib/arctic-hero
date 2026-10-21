@@ -117,3 +117,19 @@
     .dashboard-content { animation-delay: 110ms; }
 }
 @keyframes dashboard-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (min-width: 901px) {
+    .customer-nav-links a { font-size: 13px; }
+    .customer-profile { font-size: 12px; }
+    .customer-nav-actions form button { font-size: 12px; }
+    .dashboard-eyebrow { font-size: 11px; }
+    .dashboard-welcome > div > p:last-child { font-size: 14px; }
+    .dashboard-primary { font-size: 12px; }
+    .dashboard-metrics span { font-size: 13px; }
+    .dashboard-section-heading > a, .dashboard-account-link { font-size: 12px; }
+    .dashboard-route p, .dashboard-account dd, .dashboard-help a { font-size: 13px; }
+    .dashboard-route > span, .dashboard-empty p, .dashboard-help span, .dashboard-account dt { font-size: 11px; }
+    .dashboard-status { font-size: 10px; }
+    .dashboard-booking-meta strong { font-size: 13px; }
+    .dashboard-booking-meta small, .dashboard-date span { font-size: 10px; }
+}

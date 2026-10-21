@@ -181,8 +181,15 @@ body { margin: 0; color: var(--ink); font-family: var(--sans); }
 @media (max-width: 900px) {
     .header-inner, .utility-inner { width: 92%; }
     .header-inner { gap: 15px; }
-    .desktop-nav { gap: 14px; }
+    .desktop-nav, .header-actions .text-link, .header-actions .location-link { display: none; }
     .header-actions { gap: 10px; }
+    .header-inner { min-height: 76px; }
+    .menu-toggle { position: relative; z-index: 12; display: flex; width: 38px; height: 38px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 1px solid rgba(255,255,255,.45); background: transparent; }
+    .menu-toggle span { width: 14px; height: 1px; background: var(--yellow); }
+    .mobile-nav { position: absolute; z-index: 11; top: 76px; right: 0; left: 0; display: flex; flex-direction: column; padding: 7px 14px; border-top: 2px solid var(--yellow); background: var(--black); }
+    .mobile-nav a { padding: 12px 2px; border-bottom: 1px solid rgba(255,255,255,.12); color: white; font-size: 13px; text-decoration: none; }
+    .mobile-nav a:last-child { border-bottom: 0; }
+    .header-actions { margin-left: auto; }
     .hero { min-height: 480px; }
     .hero-copy { width: 90%; }
     .company-section, .locations { padding-right: 5%; padding-left: 5%; gap: 5%; }
@@ -319,4 +326,43 @@ body { margin: 0; color: var(--ink); font-family: var(--sans); }
     .locations-copy > p:not(.section-kicker) { font-size: 13px; }
     .route-list li { font-size: 11px; }
     .footer-links a { font-size: 12px; }
+}
+
+@media (min-width: 901px) {
+    .utility-inner { font-size: 12px; }
+    .utility-social { font-size: 11px; }
+    .desktop-nav a, .text-link, .location-link { font-size: 13px; }
+    .button { font-size: 13px; }
+    .button-small { font-size: 12px; }
+    .eyebrow, .section-kicker, .booking-kicker, .detail-label, .utility-label { font-size: 11px; }
+    .hero-intro { font-size: 16px; }
+    .hero-secondary { font-size: 13px; }
+    .hero-caption { font-size: 11px; }
+    .section-lead { font-size: 15px; }
+    .service-card h3 { font-size: 17px; }
+    .service-card p { font-size: 14px; }
+    .company-copy > p:not(.section-kicker), .locations-copy > p:not(.section-kicker) { font-size: 15px; }
+    .check-list li { font-size: 14px; }
+    .company-contact span { font-size: 12px; }
+    .fleet-tag { font-size: 11px; }
+    .fleet-description, .fleet-heading p { font-size: 14px; }
+    .fleet-details span { font-size: 12px; }
+    .fleet-details strong { font-size: 13px; }
+    .fleet-card .button { font-size: 12px; }
+    .booking-promo p { font-size: 14px; }
+    .booking-subtitle { font-size: 13px; }
+    .live-status { font-size: 12px; }
+    .booking-field > span { font-size: 11px; }
+    .booking-field input, .booking-field select { font-size: 14px; }
+    .booking-note { font-size: 11px; }
+    .route-list li { font-size: 13px; }
+    .location-photo figcaption { font-size: 11px; }
+    .contact-band p { font-size: 13px; }
+    .footer-brand p { font-size: 13px; }
+    .footer-links p, .newsletter p { font-size: 11px; }
+    .footer-links a { font-size: 13px; }
+    .footer-contact-link, .newsletter > span { font-size: 12px; }
+    .newsletter input { font-size: 13px; }
+    .newsletter button { font-size: 11px; }
+    .footer-bottom { font-size: 11px; }
 }

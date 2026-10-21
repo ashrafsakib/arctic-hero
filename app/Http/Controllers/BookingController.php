@@ -50,6 +50,7 @@ class BookingController extends Controller
             'bookingDate' => $request->input('booking_date', today()->toDateString()),
             'bookingTime' => $request->input('booking_time', '12:00'),
             'passengers' => (int) $request->input('passengers', 1),
+            'selectedVehicleTypeId' => (int) $request->input('vehicle_type_id', $vehicleTypes->first()?->id),
         ]);
     }
 

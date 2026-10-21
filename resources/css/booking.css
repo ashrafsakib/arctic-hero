@@ -130,3 +130,30 @@
     .booking-confirmation h1 { font-size: 38px; }
     .confirmation-actions { align-items: stretch; flex-direction: column; gap: 14px; }
 }
+
+@media (min-width: 901px) {
+    .booking-header-actions { font-size: 12px; }
+    .booking-brand { font-size: 13px; }
+    .booking-eyebrow, .booking-step-heading > span { font-size: 10px; }
+    .booking-title-row p:last-child, .booking-step-heading p { font-size: 13px; }
+    .booking-back-link, .booking-progress li { font-size: 12px; }
+    .booking-input > span { font-size: 11px; }
+    .booking-input input, .booking-input select, .booking-input textarea { font-size: 13px; }
+    .booking-input button, .booking-map-hint, .booking-step-actions > span { font-size: 11px; }
+    .booking-map-legend span { font-size: 10px; }
+    .booking-alert { font-size: 12px; }
+    .booking-step-error { font-size: 11px; }
+    .booking-next, .booking-previous { font-size: 12px; }
+    .booking-vehicle-icon { font-size: 10px; }
+    .booking-vehicle-copy small { font-size: 11px; }
+    .booking-vehicle-rate strong { font-size: 13px; }
+    .booking-vehicle-rate small { font-size: 10px; }
+    .booking-fare-panel > p { font-size: 10px; }
+    .booking-fare-route, .booking-fare-panel dl div { font-size: 11px; }
+    .booking-fare-panel > small, .booking-auth-note { font-size: 10px; }
+    .booking-confirm-check { font-size: 12px; }
+    .booking-review-details span, .confirmation-route span, .confirmation-sheet dt { font-size: 11px; }
+    .booking-review-details strong, .confirmation-sheet dd { font-size: 13px; }
+    .booking-footer, .confirmation-code, .confirmation-actions > a:last-child { font-size: 11px; }
+    .confirmation-lead { font-size: 14px; }
+}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\FleetController;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/fleet', [FleetController::class, 'index'])->name('fleet.index');
 Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::get('/booking/complete', [BookingController::class, 'complete'])->middleware('auth')->name('booking.complete');
