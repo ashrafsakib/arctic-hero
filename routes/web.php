@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FleetController;
 use App\Http\Controllers\Admin\VehicleController;
 use App\Models\Booking;
@@ -12,6 +13,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/contact', [ContactController::class, 'create'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.send');
 Route::get('/fleet', [FleetController::class, 'index'])->name('fleet.index');
 Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');

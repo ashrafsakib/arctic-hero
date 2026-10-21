@@ -16,7 +16,7 @@
                 <a href="{{ route('fleet.index') }}" aria-current="page">Our fleet</a>
                 <a href="{{ route('booking.create') }}">Book a ride</a>
                 <a href="{{ url('/') }}#locations">Oulu routes</a>
-                <a href="{{ url('/') }}#contact">Contact</a>
+                <a href="{{ route('contact.index') }}">Contact</a>
             </nav>
             <div class="header-actions">
                 @auth<a href="{{ route('dashboard') }}" class="text-link">Dashboard</a>@else<a href="{{ route('login') }}" class="text-link">Log in</a>@endauth
@@ -28,7 +28,7 @@
                 <a href="{{ route('fleet.index') }}" aria-current="page" @click="open = false">Our fleet</a>
                 <a href="{{ route('booking.create') }}" @click="open = false">Book a ride</a>
                 <a href="{{ url('/') }}#locations" @click="open = false">Oulu routes</a>
-                <a href="{{ url('/') }}#contact" @click="open = false">Contact</a>
+                <a href="{{ route('contact.index') }}" @click="open = false">Contact</a>
             </nav>
         </div>
     </header>
