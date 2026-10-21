@@ -27,6 +27,11 @@ class BookingFlowTest extends TestCase
         $bookingResponse->assertRedirect(route('booking.confirmation', $booking));
         $this->assertSame($customer->id, $booking->customer_id);
         $this->assertSame(Booking::PENDING, $booking->status);
+        $this->assertDatabaseHas('booking_status_histories', [
+            'booking_id' => $booking->id,
+            'status' => Booking::PENDING,
+            'changed_by' => $customer->id,
+        ]);
         $this->assertSame(10.0, (float) $booking->base_fare);
         $this->assertGreaterThan(0, (float) $booking->distance_km);
         $this->assertEqualsWithDelta(
@@ -39,7 +44,13 @@ class BookingFlowTest extends TestCase
             ->assertOk()
             ->assertSeeText($booking->booking_code)
             ->assertSeeText('Oulu Market Square')
-            ->assertSeeText('Standard Taxi');
+            ->assertSeeText('Standard Taxi')
+            ->assertSee(route('bookings.show', $booking), false);
+
+        $this->get(route('bookings.show', $booking))
+            ->assertOk()
+            ->assertSeeText('Booking status')
+            ->assertSeeText('Pending');
     }
 
     public function test_guest_booking_is_preserved_until_registration_and_confirmation(): void

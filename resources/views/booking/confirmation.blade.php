@@ -21,7 +21,7 @@
             <dl><div><dt>Pickup time</dt><dd>{{ $booking->booking_date->format('D, M j, Y') }} · {{ \Illuminate\Support\Carbon::parse($booking->booking_time)->format('g:i A') }}</dd></div><div><dt>Vehicle</dt><dd>{{ $booking->vehicleType->name }} · {{ $booking->passengers }} {{ $booking->passengers === 1 ? 'passenger' : 'passengers' }}</dd></div><div><dt>Estimated fare</dt><dd>€{{ number_format((float) $booking->total_fare, 2) }}</dd></div><div><dt>Status</dt><dd><span class="confirmation-status">{{ \Illuminate\Support\Str::headline($booking->status) }}</span></dd></div></dl>
             <p class="confirmation-code">Booking reference <strong>{{ $booking->booking_code }}</strong></p>
         </section>
-        <div class="confirmation-actions"><a class="booking-next" href="{{ route('dashboard') }}">View my rides <span>→</span></a><a href="{{ url('/') }}">Return to Arctic Hero</a></div>
+        <div class="confirmation-actions"><a class="booking-next" href="{{ route('bookings.show', $booking) }}">Track this ride <span>→</span></a><a href="{{ url('/') }}">Return to Arctic Hero</a></div>
     </main>
     <footer class="booking-footer"><a href="mailto:{{ config('company.email') }}">Questions? {{ config('company.email') }}</a><span>ARCTIC HERO · OULU</span></footer>
 </body>

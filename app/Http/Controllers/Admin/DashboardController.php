@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactSubmission;
+use App\Models\Booking;
 use App\Models\Vehicle;
 use Illuminate\View\View;
 
@@ -15,6 +16,7 @@ class DashboardController extends Controller
             'vehicleCount' => Vehicle::count(),
             'activeVehicleCount' => Vehicle::where('status', 'active')->count(),
             'newContactCount' => ContactSubmission::where('status', ContactSubmission::NEW)->count(),
+            'pendingBookingCount' => Booking::where('status', Booking::PENDING)->count(),
         ]);
     }
 }

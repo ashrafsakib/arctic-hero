@@ -19,11 +19,11 @@
             <div class="dashboard-content">
                 <section class="dashboard-trips">
                     <div class="dashboard-section-heading">
-                        <div><p class="dashboard-eyebrow">Your travel plans</p><h2>Upcoming rides</h2></div>
+                        <div><p class="dashboard-eyebrow">Your travel plans</p><h2>Your bookings</h2></div>
                         <a href="{{ url('/') }}#book">Book another <span>↗</span></a>
                     </div>
 
-                    @if ($upcomingBookings->isEmpty())
+                    @if ($bookings->isEmpty())
                         <div class="dashboard-empty">
                             <span class="dashboard-empty-mark">A</span>
                             <h3>No upcoming rides</h3>
@@ -32,14 +32,14 @@
                         </div>
                     @else
                         <div class="dashboard-bookings">
-                            @foreach ($upcomingBookings as $booking)
+                            @foreach ($bookings as $booking)
                                 <article class="dashboard-booking">
                                     <time class="dashboard-date" datetime="{{ $booking->booking_date->toDateString() }}">
                                         <span>{{ $booking->booking_date->format('M') }}</span>
                                         <strong>{{ $booking->booking_date->format('d') }}</strong>
                                     </time>
                                     <div class="dashboard-route">
-                                        <p>{{ $booking->pickup_address }} <span>→</span> {{ $booking->destination_address }}</p>
+                                        <p><a href="{{ route('bookings.show', $booking) }}">{{ $booking->pickup_address }} <span>→</span> {{ $booking->destination_address }}</a></p>
                                         <span>{{ \Illuminate\Support\Carbon::parse($booking->booking_time)->format('g:i A') }} · {{ $booking->vehicleType->name }}</span>
                                     </div>
                                     <div class="dashboard-booking-meta">

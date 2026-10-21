@@ -9,6 +9,7 @@
         <a class="{{ request()->routeIs('admin.dashboard') ? 'is-current' : '' }}" href="{{ route('admin.dashboard') }}"><span aria-hidden="true">01</span>Overview</a>
         <a class="{{ request()->routeIs('admin.vehicles.*') ? 'is-current' : '' }}" href="{{ route('admin.vehicles.index') }}"><span aria-hidden="true">02</span>Fleet management</a>
         <a class="{{ request()->routeIs('admin.contact-submissions.*') ? 'is-current' : '' }}" href="{{ route('admin.contact-submissions.index') }}"><span aria-hidden="true">03</span>Contact inbox</a>
+        <a class="{{ request()->routeIs('admin.bookings.*') ? 'is-current' : '' }}" href="{{ route('admin.bookings.index') }}"><span aria-hidden="true">04</span>Bookings</a>
     </nav>
 
     <div class="admin-sidebar-footer">

@@ -10,7 +10,12 @@
                 <h1 class="mt-2 text-3xl font-semibold text-slate-900">Admin dashboard</h1>
                 <p class="mt-2 text-slate-600">Manage vehicles and review your fleet at a glance.</p>
             </div>
-            <div class="grid gap-5 sm:grid-cols-3">
+            <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+                <section class="rounded border border-slate-200 bg-white p-6">
+                    <p class="text-sm text-slate-600">Pending bookings</p>
+                    <p class="mt-2 text-4xl font-semibold text-slate-900">{{ $pendingBookingCount }}</p>
+                    <a class="mt-5 inline-flex items-center gap-3 bg-yellow-300 px-4 py-3 text-sm font-bold text-slate-950 hover:bg-yellow-400" href="{{ route('admin.bookings.index', ['status' => 'pending']) }}">Review requests <span aria-hidden="true">→</span></a>
+                </section>
                 <section class="rounded border border-slate-200 bg-white p-6">
                     <p class="text-sm text-slate-600">Vehicles in fleet</p>
                     <p class="mt-2 text-4xl font-semibold text-slate-900">{{ $vehicleCount }}</p>

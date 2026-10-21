@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\BookingStatusHistory;
 use App\Models\Location;
 use App\Models\VehicleType;
 use Illuminate\Http\RedirectResponse;
@@ -118,30 +119,41 @@ class BookingController extends Controller
         $distanceFare = round($distance * (float) $vehicleType->per_km_rate, 2);
         $timeFare = round($duration * (float) $vehicleType->per_minute_rate, 2);
 
-        $booking = DB::transaction(fn () => Booking::create([
-            'booking_code' => 'AH-'.Str::upper(Str::random(8)),
-            'customer_id' => $request->user()->id,
-            'pickup_address' => $data['pickup_address'],
-            'pickup_lat' => $data['pickup_lat'],
-            'pickup_lng' => $data['pickup_lng'],
-            'destination_address' => $data['destination_address'],
-            'destination_lat' => $data['destination_lat'],
-            'destination_lng' => $data['destination_lng'],
-            'booking_date' => $data['booking_date'],
-            'booking_time' => $data['booking_time'],
-            'passengers' => $data['passengers'],
-            'luggage_count' => $data['luggage_count'],
-            'vehicle_type_id' => $vehicleType->id,
-            'distance_km' => $distance,
-            'estimated_duration_minutes' => $duration,
-            'base_fare' => $baseFare,
-            'distance_fare' => $distanceFare,
-            'time_fare' => $timeFare,
-            'extra_charge' => 0,
-            'total_fare' => round($baseFare + $distanceFare + $timeFare, 2),
-            'status' => Booking::PENDING,
-            'customer_notes' => $data['customer_notes'] ?? null,
-        ]));
+        $booking = DB::transaction(function () use ($request, $data, $vehicleType, $distance, $duration, $baseFare, $distanceFare, $timeFare): Booking {
+            $booking = Booking::create([
+                'booking_code' => 'AH-'.Str::upper(Str::random(8)),
+                'customer_id' => $request->user()->id,
+                'pickup_address' => $data['pickup_address'],
+                'pickup_lat' => $data['pickup_lat'],
+                'pickup_lng' => $data['pickup_lng'],
+                'destination_address' => $data['destination_address'],
+                'destination_lat' => $data['destination_lat'],
+                'destination_lng' => $data['destination_lng'],
+                'booking_date' => $data['booking_date'],
+                'booking_time' => $data['booking_time'],
+                'passengers' => $data['passengers'],
+                'luggage_count' => $data['luggage_count'],
+                'vehicle_type_id' => $vehicleType->id,
+                'distance_km' => $distance,
+                'estimated_duration_minutes' => $duration,
+                'base_fare' => $baseFare,
+                'distance_fare' => $distanceFare,
+                'time_fare' => $timeFare,
+                'extra_charge' => 0,
+                'total_fare' => round($baseFare + $distanceFare + $timeFare, 2),
+                'status' => Booking::PENDING,
+                'customer_notes' => $data['customer_notes'] ?? null,
+            ]);
+
+            $booking->statusHistories()->create([
+                'status' => Booking::PENDING,
+                'changed_by' => $request->user()->id,
+                'notes' => 'Booking request submitted.',
+                'created_at' => now(),
+            ]);
+
+            return $booking;
+        });
 
         return redirect()->route('booking.confirmation', $booking);
     }
@@ -152,6 +164,18 @@ class BookingController extends Controller
 
         return view('booking.confirmation', [
             'booking' => $booking->load('vehicleType'),
+        ]);
+    }
+
+    public function show(Request $request, Booking $booking): View
+    {
+        abort_unless($booking->customer_id === $request->user()->id, 404);
+
+        return view('booking.show', [
+            'booking' => $booking->load('vehicleType'),
+            'statusHistories' => $booking->statusHistories()
+                ->orderBy('created_at')
+                ->get(['id', 'booking_id', 'status', 'created_at']),
         ]);
     }
 

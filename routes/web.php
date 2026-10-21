@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\ContactSubmissionController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
@@ -21,6 +22,7 @@ Route::get('/booking', [BookingController::class, 'create'])->name('booking.crea
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::get('/booking/complete', [BookingController::class, 'complete'])->middleware('auth')->name('booking.complete');
 Route::get('/booking/{booking}/confirmation', [BookingController::class, 'confirmation'])->middleware('auth')->name('booking.confirmation');
+Route::get('/my/bookings/{booking}', [BookingController::class, 'show'])->middleware('auth')->name('bookings.show');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
@@ -34,21 +36,24 @@ Route::get('/dashboard', function () {
         ->whereNotIn('status', [Booking::COMPLETED, Booking::CANCELLED, Booking::REJECTED]);
 
     $upcomingCount = (clone $upcomingQuery)->count();
-    $upcomingBookings = (clone $upcomingQuery)
+    $bookings = $user->bookings()
         ->with('vehicleType')
-        ->orderBy('booking_date')
-        ->orderBy('booking_time')
-        ->limit(5)
+        ->orderByDesc('booking_date')
+        ->orderByDesc('booking_time')
+        ->limit(10)
         ->get();
     $completedTrips = $user->bookings()->where('status', Booking::COMPLETED)->count();
     $totalTrips = $user->bookings()->count();
     $firstName = explode(' ', trim($user->name))[0] ?? $user->name;
 
-    return view('dashboard', compact('user', 'firstName', 'upcomingBookings', 'upcomingCount', 'completedTrips', 'totalTrips'));
+    return view('dashboard', compact('user', 'firstName', 'bookings', 'upcomingCount', 'completedTrips', 'totalTrips'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
+    Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('bookings.show');
+    Route::patch('/bookings/{booking}', [AdminBookingController::class, 'update'])->name('bookings.update');
     Route::get('/contact-submissions', [ContactSubmissionController::class, 'index'])->name('contact-submissions.index');
     Route::get('/contact-submissions/{contactSubmission}', [ContactSubmissionController::class, 'show'])->name('contact-submissions.show');
     Route::patch('/contact-submissions/{contactSubmission}', [ContactSubmissionController::class, 'update'])->name('contact-submissions.update');
