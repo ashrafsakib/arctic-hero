@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FleetController;
+use App\Http\Controllers\Admin\VehicleController;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 
@@ -42,9 +43,10 @@ Route::get('/dashboard', function () {
     return view('dashboard', compact('user', 'firstName', 'upcomingBookings', 'upcomingCount', 'completedTrips', 'totalTrips'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/admin', DashboardController::class)
-    ->middleware(['auth', 'admin'])
-    ->name('admin.dashboard');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', DashboardController::class)->name('dashboard');
+    Route::resource('vehicles', VehicleController::class);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
