@@ -10,7 +10,7 @@
                 <h1 class="mt-2 text-3xl font-semibold text-slate-900">Admin dashboard</h1>
                 <p class="mt-2 text-slate-600">Manage vehicles and review your fleet at a glance.</p>
             </div>
-            <div class="grid gap-5 sm:grid-cols-2">
+            <div class="grid gap-5 sm:grid-cols-3">
                 <section class="rounded border border-slate-200 bg-white p-6">
                     <p class="text-sm text-slate-600">Vehicles in fleet</p>
                     <p class="mt-2 text-4xl font-semibold text-slate-900">{{ $vehicleCount }}</p>
@@ -20,6 +20,11 @@
                     <p class="text-sm text-slate-600">Active vehicles</p>
                     <p class="mt-2 text-4xl font-semibold text-slate-900">{{ $activeVehicleCount }}</p>
                     <a class="mt-5 inline-block text-sm font-semibold text-slate-800 underline decoration-yellow-500 underline-offset-4" href="{{ route('admin.vehicles.index', ['status' => 'active']) }}">View active vehicles</a>
+                </section>
+                <section class="rounded border border-slate-200 bg-white p-6">
+                    <p class="text-sm text-slate-600">New contact submissions</p>
+                    <p class="mt-2 text-4xl font-semibold text-slate-900">{{ $newContactCount }}</p>
+                    <a class="mt-5 inline-block text-sm font-semibold text-slate-800 underline decoration-yellow-500 underline-offset-4" href="{{ route('admin.contact-submissions.index', ['status' => 'new']) }}">Open inbox</a>
                 </section>
             </div>
         </div>

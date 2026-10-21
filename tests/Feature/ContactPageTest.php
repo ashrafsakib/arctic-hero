@@ -3,11 +3,15 @@
 namespace Tests\Feature;
 
 use App\Mail\ContactMessage;
+use App\Models\ContactSubmission;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class ContactPageTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_contact_page_shows_company_contact_details_and_message_form(): void
     {
         $this->get(route('contact.index'))
@@ -40,6 +44,14 @@ class ContactPageTest extends TestCase
                 && $mail->details['topic'] === 'booking';
         });
 
+        $this->assertDatabaseHas('contact_submissions', [
+            'name' => 'Aino Korhonen',
+            'email' => 'aino@example.com',
+            'topic' => 'booking',
+            'status' => ContactSubmission::NEW,
+            'email_status' => 'sent',
+        ]);
+
         $this->get(route('contact.index'))
             ->assertOk()
             ->assertSeeText('Message received.');
@@ -59,5 +71,6 @@ class ContactPageTest extends TestCase
             ->assertSessionHasErrors(['email', 'topic', 'message']);
 
         Mail::assertNothingSent();
+        $this->assertDatabaseCount('contact_submissions', 0);
     }
 }
