@@ -2,35 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\VehicleType;
-use Illuminate\Support\Str;
+use App\Models\Vehicle;
 use Illuminate\View\View;
 
 class FleetController extends Controller
 {
     public function index(): View
     {
-        $vehicleTypes = VehicleType::query()
+        $vehicles = Vehicle::query()
+            ->with('vehicleType')
             ->where('status', 'active')
-            ->orderBy('base_fare')
+            ->whereHas('vehicleType', fn ($query) => $query->where('status', 'active'))
+            ->orderBy('name')
             ->get();
 
-        $vehicleTypes->each(function (VehicleType $vehicleType): void {
-            $name = Str::lower($vehicleType->name);
-            $fallbackImage = match (true) {
-                Str::contains($name, 'premium') => 'taxi-driver.jpg',
-                Str::contains($name, ['mini', 'van']) => 'northern-road.jpg',
-                default => 'taxi-city.jpg',
-            };
+        $maximumPassengers = $vehicles->max(fn (Vehicle $vehicle) => $vehicle->vehicleType->passenger_capacity) ?? 0;
 
-            $vehicleType->setAttribute(
-                'display_image',
-                $vehicleType->image
-                    ? asset('storage/'.$vehicleType->image)
-                    : asset('images/'.$fallbackImage),
-            );
-        });
-
-        return view('fleet.index', compact('vehicleTypes'));
+        return view('fleet.index', compact('vehicles', 'maximumPassengers'));
     }
 }

@@ -46,8 +46,8 @@
         </section>
 
         <section class="fleet-intro" aria-label="Fleet overview">
-            <p>Three ways to get there</p>
-            <span>Up to 7 passengers</span>
+            <p>{{ $vehicles->count() }} {{ $vehicles->count() === 1 ? 'vehicle' : 'vehicles' }} available</p>
+            <span>Up to {{ $maximumPassengers }} passengers</span>
             <span>Clear fare estimates</span>
             <span>City and airport trips</span>
         </section>
@@ -58,17 +58,18 @@
                 <p>Every ride starts with the right amount of room. Compare the options and see an estimated fare when you plan your route.</p>
             </div>
 
-            @if ($vehicleTypes->isEmpty())
+            @if ($vehicles->isEmpty())
                 <div class="fleet-empty"><h2>Fleet details are being updated.</h2><p>Contact our team to plan your ride.</p><a href="mailto:{{ config('company.email') }}">{{ config('company.email') }}</a></div>
             @else
                 <div class="fleet-vehicle-list">
-                    @foreach ($vehicleTypes as $index => $vehicleType)
+                    @foreach ($vehicles as $index => $vehicle)
+                        @php($vehicleType = $vehicle->vehicleType)
                         <article class="fleet-vehicle-row">
-                            <figure class="fleet-vehicle-image"><img src="{{ $vehicleType->display_image }}" alt="{{ $vehicleType->name }} vehicle" loading="lazy"><figcaption>{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }} / {{ $vehicleTypes->count() }}</figcaption></figure>
+                            <figure class="fleet-vehicle-image"><img src="{{ $vehicle->display_image_url }}" alt="{{ trim(($vehicle->brand ?? '').' '.($vehicle->model ?? '')) ?: $vehicle->name }}" loading="lazy"><figcaption>{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }} / {{ $vehicles->count() }}</figcaption></figure>
                             <div class="fleet-vehicle-copy">
                                 <p class="fleet-vehicle-category">{{ $vehicleType->passenger_capacity > 4 ? 'Group travel' : ($vehicleType->base_fare > 10 ? 'Extra comfort' : 'Everyday ride') }}</p>
-                                <h3>{{ $vehicleType->name }}</h3>
-                                <p class="fleet-vehicle-description">{{ $vehicleType->description }}</p>
+                                <h3>{{ $vehicle->name }}</h3>
+                                <p class="fleet-vehicle-description">{{ trim(($vehicle->brand ?? '').' '.($vehicle->model ?? '')) }} · {{ $vehicleType->name }}. {{ $vehicleType->description }}</p>
                                 <div class="fleet-capacities"><div><span>Passengers</span><strong>Up to {{ $vehicleType->passenger_capacity }}</strong></div><div><span>Luggage</span><strong>{{ $vehicleType->luggage_capacity }} {{ $vehicleType->luggage_capacity === 1 ? 'bag' : 'bags' }}</strong></div></div>
                                 <div class="fleet-price"><span>Base fare</span><strong>€{{ number_format((float) $vehicleType->base_fare, 2) }}</strong><small>+ €{{ number_format((float) $vehicleType->per_km_rate, 2) }}/km · €{{ number_format((float) $vehicleType->per_minute_rate, 2) }}/min</small></div>
                                 <a class="fleet-book-link" href="{{ route('booking.create', ['vehicle_type_id' => $vehicleType->id]) }}">Choose this vehicle <span>↗</span></a>

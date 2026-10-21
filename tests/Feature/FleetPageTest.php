@@ -3,7 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\VehicleType;
+use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class FleetPageTest extends TestCase
@@ -12,16 +15,36 @@ class FleetPageTest extends TestCase
 
     public function test_fleet_page_lists_active_vehicles_with_details_and_booking_links(): void
     {
-        $activeVehicle = $this->createVehicleType('Comfort Car', 'active');
-        $this->createVehicleType('Retired Car', 'inactive');
+        Storage::fake('public');
+        $vehicleType = $this->createVehicleType('Standard Taxi', 'active');
+        $image = UploadedFile::fake()->image('aurora.jpg')->store('fleet', 'public');
+        Vehicle::query()->create([
+            'vehicle_type_id' => $vehicleType->id,
+            'name' => 'Aurora 05',
+            'brand' => 'Toyota',
+            'model' => 'Corolla',
+            'registration_number' => 'OUX-105',
+            'status' => 'active',
+            'image' => $image,
+        ]);
+
+        $inactiveType = $this->createVehicleType('Retired Taxi', 'inactive');
+        Vehicle::query()->create([
+            'vehicle_type_id' => $inactiveType->id,
+            'name' => 'Retired Car',
+            'registration_number' => 'OUX-106',
+            'status' => 'active',
+        ]);
 
         $this->get(route('fleet.index'))
             ->assertOk()
-            ->assertSeeText('Comfort Car')
+            ->assertSeeText('Aurora 05')
+            ->assertSeeText('Toyota Corolla')
             ->assertSeeText('Up to 4')
             ->assertSeeText('€10.00')
             ->assertDontSeeText('Retired Car')
-            ->assertSee(route('booking.create', ['vehicle_type_id' => $activeVehicle->id]), false);
+            ->assertSee(route('booking.create', ['vehicle_type_id' => $vehicleType->id]), false)
+            ->assertSee(asset('storage/'.$image), false);
     }
 
     private function createVehicleType(string $name, string $status): VehicleType

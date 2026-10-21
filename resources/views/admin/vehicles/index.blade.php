@@ -22,11 +22,17 @@
                     <label class="min-w-56 flex-1 text-sm font-medium text-slate-700">Search fleet
                         <input class="mt-1 block min-h-10 w-full border-slate-300 text-sm focus:border-yellow-600 focus:ring-yellow-500" type="search" name="search" value="{{ request('search') }}" placeholder="Name, make, model or plate">
                     </label>
-                    <label class="w-full sm:w-48 text-sm font-medium text-slate-700">Status
+                    <label class="w-full sm:w-44 text-sm font-medium text-slate-700">Type
+                        <select class="mt-1 block min-h-10 w-full border-slate-300 text-sm focus:border-yellow-600 focus:ring-yellow-500" name="vehicle_type_id"><option value="">All types</option>@foreach ($vehicleTypes as $vehicleType)<option value="{{ $vehicleType->id }}" @selected((string) request('vehicle_type_id') === (string) $vehicleType->id)>{{ $vehicleType->name }}</option>@endforeach</select>
+                    </label>
+                    <label class="w-full sm:w-40 text-sm font-medium text-slate-700">Make
+                        <select class="mt-1 block min-h-10 w-full border-slate-300 text-sm focus:border-yellow-600 focus:ring-yellow-500" name="brand"><option value="">All makes</option>@foreach ($brands as $brand)<option value="{{ $brand }}" @selected(request('brand') === $brand)>{{ $brand }}</option>@endforeach</select>
+                    </label>
+                    <label class="w-full sm:w-40 text-sm font-medium text-slate-700">Status
                         <select class="mt-1 block min-h-10 w-full border-slate-300 text-sm focus:border-yellow-600 focus:ring-yellow-500" name="status"><option value="">All statuses</option>@foreach ($statuses as $status)<option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>@endforeach</select>
                     </label>
                     <button class="min-h-10 bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-700" type="submit">Filter</button>
-                    @if (request()->hasAny(['search', 'status']))<a class="min-h-10 px-2 py-2 text-sm text-slate-700 underline underline-offset-4" href="{{ route('admin.vehicles.index') }}">Clear</a>@endif
+                    @if (request()->hasAny(['search', 'status', 'vehicle_type_id', 'brand']))<a class="min-h-10 px-2 py-2 text-sm text-slate-700 underline underline-offset-4" href="{{ route('admin.vehicles.index') }}">Clear</a>@endif
                 </form>
 
                 <div class="overflow-x-auto">
@@ -35,7 +41,7 @@
                         <tbody class="divide-y divide-slate-100">
                             @forelse ($vehicles as $vehicle)
                                 <tr class="hover:bg-slate-50">
-                                    <td class="px-4 py-4"><a class="font-semibold text-slate-900 underline decoration-transparent underline-offset-4 hover:decoration-yellow-600" href="{{ route('admin.vehicles.show', $vehicle) }}">{{ $vehicle->name }}</a><span class="mt-1 block text-xs text-slate-600">{{ trim(($vehicle->brand ?? '').' '.($vehicle->model ?? '')) ?: 'Make and model not set' }}</span></td>
+                                    <td class="px-4 py-4"><div class="flex items-center gap-3"><img class="h-12 w-16 shrink-0 border border-slate-200 bg-slate-100 object-cover" src="{{ $vehicle->display_image_url }}" alt="" loading="lazy"><div class="min-w-0"><a class="font-semibold text-slate-900 underline decoration-transparent underline-offset-4 hover:decoration-yellow-600" href="{{ route('admin.vehicles.show', $vehicle) }}">{{ $vehicle->name }}</a><span class="mt-1 block text-xs text-slate-600">{{ trim(($vehicle->brand ?? '').' '.($vehicle->model ?? '')) ?: 'Make and model not set' }}</span></div></div></td>
                                     <td class="px-4 py-4 text-slate-700">{{ $vehicle->vehicleType->name }}</td>
                                     <td class="px-4 py-4 font-medium text-slate-900">{{ $vehicle->registration_number }}</td>
                                     <td class="px-4 py-4 text-slate-700">{{ $vehicle->vehicleType->passenger_capacity }} passengers · {{ $vehicle->vehicleType->luggage_capacity }} bags</td>

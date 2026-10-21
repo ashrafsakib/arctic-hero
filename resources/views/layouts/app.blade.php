@@ -16,21 +16,29 @@
     </head>
     <body class="font-sans antialiased">
         <div class="customer-app min-h-screen">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+            @if (Auth::check() && Auth::user()->isAdmin())
+                <div class="admin-shell">
+                    @include('layouts.admin-sidebar')
+                    <div class="admin-main">
+                        @isset($header)
+                            <header class="admin-content-header">
+                                <div>{{ $header }}</div>
+                            </header>
+                        @endisset
+                        <main>{{ $slot }}</main>
                     </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                </div>
+            @else
+                @include('layouts.navigation')
+                @isset($header)
+                    <header class="bg-white shadow">
+                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endisset
+                <main>{{ $slot }}</main>
+            @endif
         </div>
     </body>
 </html>

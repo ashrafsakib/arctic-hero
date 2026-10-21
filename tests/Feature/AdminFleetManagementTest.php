@@ -39,6 +39,9 @@ class AdminFleetManagementTest extends TestCase
             'vehicle_type_id' => $vehicleType->id,
         ]);
         Storage::disk('public')->assertExists($vehicle->image);
+        $this->get(route('admin.vehicles.index'))
+            ->assertOk()
+            ->assertSee('src="'.$vehicle->display_image_url.'"', false);
 
         $this->get(route('admin.vehicles.show', $vehicle))
             ->assertOk()
@@ -72,18 +75,30 @@ class AdminFleetManagementTest extends TestCase
     {
         $admin = User::factory()->create(['role' => 'admin', 'status' => 'active']);
         $vehicleType = $this->createVehicleType();
+        $premiumType = $this->createVehicleType('Premium Taxi');
         Vehicle::query()->create($this->vehicleData($vehicleType));
         Vehicle::query()->create($this->vehicleData($vehicleType, [
             'name' => 'Night Runner',
             'registration_number' => 'OUX-903',
             'status' => 'inactive',
         ]));
+        Vehicle::query()->create($this->vehicleData($premiumType, [
+            'name' => 'Aurora Premium',
+            'brand' => 'Mercedes-Benz',
+            'registration_number' => 'OUX-904',
+        ]));
 
         $this->actingAs($admin)
-            ->get(route('admin.vehicles.index', ['search' => 'Aurora', 'status' => 'active']))
+            ->get(route('admin.vehicles.index', [
+                'search' => 'Aurora',
+                'status' => 'active',
+                'vehicle_type_id' => $vehicleType->id,
+                'brand' => 'Toyota',
+            ]))
             ->assertOk()
             ->assertSeeText('Aurora 09')
-            ->assertDontSeeText('Night Runner');
+            ->assertDontSeeText('Night Runner')
+            ->assertDontSeeText('Aurora Premium');
     }
 
     public function test_vehicle_registration_number_must_be_unique(): void
@@ -111,10 +126,10 @@ class AdminFleetManagementTest extends TestCase
         $this->actingAs($disabledAdmin)->get(route('admin.vehicles.index'))->assertForbidden();
     }
 
-    private function createVehicleType(): VehicleType
+    private function createVehicleType(string $name = 'Standard Taxi'): VehicleType
     {
         return VehicleType::query()->create([
-            'name' => 'Standard Taxi',
+            'name' => $name,
             'description' => 'Comfortable taxi for city trips.',
             'passenger_capacity' => 4,
             'luggage_capacity' => 2,

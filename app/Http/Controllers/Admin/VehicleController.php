@@ -14,10 +14,16 @@ class VehicleController extends Controller
 {
     public function index(Request $request): View
     {
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'status' => ['nullable', 'in:active,maintenance,inactive'],
+            'vehicle_type_id' => ['nullable', 'integer', 'exists:vehicle_types,id'],
+            'brand' => ['nullable', 'string', 'max:255'],
+        ]);
+
         $vehicles = Vehicle::query()
             ->with('vehicleType')
-            ->when($request->filled('search'), function ($query) use ($request): void {
-                $search = $request->string('search')->toString();
+            ->when($filters['search'] ?? null, function ($query, string $search): void {
                 $query->where(function ($query) use ($search): void {
                     $query->where('name', 'like', "%{$search}%")
                         ->orWhere('brand', 'like', "%{$search}%")
@@ -25,7 +31,9 @@ class VehicleController extends Controller
                         ->orWhere('registration_number', 'like', "%{$search}%");
                 });
             })
-            ->when(in_array($request->input('status'), ['active', 'maintenance', 'inactive'], true), fn ($query) => $query->where('status', $request->input('status')))
+            ->when($filters['status'] ?? null, fn ($query, string $status) => $query->where('status', $status))
+            ->when($filters['vehicle_type_id'] ?? null, fn ($query, int $vehicleTypeId) => $query->where('vehicle_type_id', $vehicleTypeId))
+            ->when($filters['brand'] ?? null, fn ($query, string $brand) => $query->where('brand', $brand))
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
@@ -36,6 +44,8 @@ class VehicleController extends Controller
             'activeVehicles' => Vehicle::where('status', 'active')->count(),
             'maintenanceVehicles' => Vehicle::where('status', 'maintenance')->count(),
             'statuses' => ['active', 'maintenance', 'inactive'],
+            'vehicleTypes' => VehicleType::query()->orderBy('name')->get(['id', 'name']),
+            'brands' => Vehicle::query()->whereNotNull('brand')->where('brand', '!=', '')->distinct()->orderBy('brand')->pluck('brand'),
         ]);
     }
 

@@ -69,6 +69,52 @@
 .dashboard-help a:hover { color: #807600; }
 .customer-app :focus-visible { outline: 2px solid #8c8100; outline-offset: 3px; }
 
+.admin-shell { display: grid; min-height: 100vh; grid-template-columns: 245px minmax(0, 1fr); background: #f1f1ef; }
+.admin-sidebar { position: sticky; top: 0; display: flex; height: 100vh; flex-direction: column; padding: 25px 17px 16px; background: #11110f; color: white; }
+.admin-sidebar-brand { display: flex; align-items: center; gap: 10px; color: white; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-decoration: none; }
+.admin-sidebar-brand b { color: #f5df00; }
+.admin-sidebar-brand small { display: block; margin-top: 3px; color: rgba(255,255,255,.53); font-size: 9px; font-weight: 600; letter-spacing: .12em; }
+.admin-sidebar-mark { display: grid; width: 32px; height: 32px; flex: 0 0 32px; place-items: center; border: 2px solid #f5df00; border-radius: 50%; color: #f5df00; font: 700 18px 'Barlow Condensed', sans-serif; }
+.admin-sidebar-label { margin: 42px 8px 9px; color: rgba(255,255,255,.48); font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.admin-sidebar-nav { display: grid; gap: 4px; }
+.admin-sidebar-nav a { display: flex; min-height: 44px; align-items: center; gap: 11px; padding: 0 10px; border-left: 3px solid transparent; color: rgba(255,255,255,.72); font-size: 12px; font-weight: 600; text-decoration: none; }
+.admin-sidebar-nav a > span { color: rgba(255,255,255,.4); font: 600 14px 'Barlow Condensed', sans-serif; }
+.admin-sidebar-nav a:hover, .admin-sidebar-nav a.is-current { border-left-color: #f5df00; background: #22221f; color: white; }
+.admin-sidebar-nav a.is-current > span { color: #f5df00; }
+.admin-sidebar-footer { display: grid; gap: 14px; margin-top: auto; padding: 16px 4px 0; border-top: 1px solid rgba(255,255,255,.16); }
+.admin-sidebar-user { display: flex; min-width: 0; align-items: center; gap: 10px; color: white; font-size: 11px; font-weight: 600; text-decoration: none; }
+.admin-sidebar-user > span:first-child { display: grid; width: 31px; height: 31px; flex: 0 0 31px; place-items: center; background: #f5df00; color: #11110f; font-weight: 700; }
+.admin-sidebar-user > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-sidebar-user small { display: block; margin-top: 3px; color: rgba(255,255,255,.54); font-size: 9px; font-weight: 400; }
+.admin-sidebar-public { display: flex; justify-content: space-between; color: rgba(255,255,255,.68); font-size: 10px; text-decoration: none; }
+.admin-sidebar-public:hover { color: #f5df00; }
+.admin-sidebar-footer form button { width: 100%; min-height: 36px; border: 1px solid rgba(255,255,255,.25); background: transparent; color: white; font: 600 11px 'DM Sans', sans-serif; text-align: left; padding: 0 10px; cursor: pointer; }
+.admin-sidebar-footer form button:hover { border-color: #f5df00; color: #f5df00; }
+.admin-main { min-width: 0; }
+.admin-content-header { min-height: 72px; padding: 16px clamp(20px, 4vw, 54px); border-bottom: 1px solid #deded8; background: white; }
+.admin-content-header > div { max-width: 1320px; margin: 0 auto; }
+.admin-page { min-width: 0; }
+
+@media (max-width: 900px) {
+    .admin-shell { grid-template-columns: 1fr; }
+    .admin-sidebar { position: relative; height: auto; min-height: 0; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 25px; padding: 13px 4%; }
+    .admin-sidebar-label { display: none; }
+    .admin-sidebar-nav { display: flex; flex: 1 1 auto; flex-wrap: wrap; gap: 5px; }
+    .admin-sidebar-nav a { min-height: 38px; }
+    .admin-sidebar-footer { display: flex; align-items: center; gap: 13px; margin: 0; padding: 0; border: 0; }
+    .admin-sidebar-user { display: none; }
+    .admin-sidebar-public { display: none; }
+    .admin-sidebar-footer form button { width: auto; min-height: 34px; }
+}
+
+@media (max-width: 560px) {
+    .admin-sidebar { gap: 10px; }
+    .admin-sidebar-brand { width: calc(100% - 45px); }
+    .admin-sidebar-nav { flex: 1 1 100%; }
+    .admin-sidebar-nav a { flex: 1 1 auto; font-size: 11px; }
+    .admin-sidebar-footer { position: absolute; top: 12px; right: 4%; }
+}
+
 @media (max-width: 900px) {
     .customer-nav-inner { width: 92%; gap: 17px; }
     .customer-nav-links { gap: 15px; }
