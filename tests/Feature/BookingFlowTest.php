@@ -50,7 +50,13 @@ class BookingFlowTest extends TestCase
         $this->get(route('bookings.show', $booking))
             ->assertOk()
             ->assertSeeText('Booking status')
-            ->assertSeeText('Pending');
+            ->assertSeeText('Pending')
+            ->assertSeeText($booking->booking_code);
+
+        $this->get(route('dashboard'))
+            ->assertOk()
+            ->assertSeeText($booking->booking_code)
+            ->assertSee('href="'.route('bookings.show', $booking).'"', false);
     }
 
     public function test_guest_booking_is_preserved_until_registration_and_confirmation(): void

@@ -6,7 +6,7 @@
                 <a class="{{ request()->routeIs('admin.dashboard') ? 'is-active' : '' }}" href="{{ route('admin.dashboard') }}">Admin dashboard</a>
                 <a class="{{ request()->routeIs('admin.vehicles.*') ? 'is-active' : '' }}" href="{{ route('admin.vehicles.index') }}">Fleet</a>
             @else
-                <a class="{{ request()->routeIs('dashboard') ? 'is-active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a><a href="{{ url('/#services') }}">Services</a><a href="{{ route('fleet.index') }}">Our fleet</a><a href="{{ route('routes.index') }}">Oulu routes</a>
+                <a class="{{ request()->routeIs('dashboard') ? 'is-active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a><a href="{{ route('booking.create') }}">Book a ride</a><a href="{{ url('/#services') }}">Services</a><a href="{{ route('fleet.index') }}">Our fleet</a><a href="{{ route('routes.index') }}">Oulu routes</a>
             @endif
         </div>
         <div class="customer-nav-actions">
@@ -19,7 +19,7 @@
         @if (Auth::user()->isAdmin())
             <a href="{{ route('admin.dashboard') }}" @click="open = false">Admin dashboard</a><a href="{{ route('admin.vehicles.index') }}" @click="open = false">Fleet management</a>
         @else
-            <a href="{{ route('dashboard') }}" @click="open = false">Dashboard</a><a href="{{ url('/#services') }}" @click="open = false">Services</a><a href="{{ route('fleet.index') }}" @click="open = false">Our fleet</a><a href="{{ route('routes.index') }}" @click="open = false">Oulu routes</a><a href="{{ route('profile.edit') }}" @click="open = false">Manage profile</a>
+            <a href="{{ route('dashboard') }}" @click="open = false">Dashboard</a><a href="{{ route('booking.create') }}" @click="open = false">Book a ride</a><a href="{{ url('/#services') }}" @click="open = false">Services</a><a href="{{ route('fleet.index') }}" @click="open = false">Our fleet</a><a href="{{ route('routes.index') }}" @click="open = false">Oulu routes</a><a href="{{ route('profile.edit') }}" @click="open = false">Manage profile</a>
         @endif
         <form method="POST" action="{{ route('logout', absolute: false) }}">@csrf<button type="submit">Log out</button></form>
     </div>

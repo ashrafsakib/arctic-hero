@@ -27,7 +27,7 @@ class DashboardTest extends TestCase
             'status' => 'active',
         ]);
 
-        $this->createBooking($customer, $vehicleType, 'OWN-1001', 'Oulu Airport', 'Oulu Market Square');
+        $ownBooking = $this->createBooking($customer, $vehicleType, 'OWN-1001', 'Oulu Airport', 'Oulu Market Square');
         $this->createBooking($otherCustomer, $vehicleType, 'OTHER-1001', 'Private customer pickup', 'Private destination');
 
         $this->actingAs($customer)
@@ -37,6 +37,8 @@ class DashboardTest extends TestCase
             ->assertSeeText('Oulu Airport')
             ->assertSeeText('Oulu Market Square')
             ->assertSeeText('Standard Taxi')
+            ->assertSee('href="'.route('bookings.show', $ownBooking).'"', false)
+            ->assertSeeText('View details · OWN-1001')
             ->assertDontSeeText('Private customer pickup')
             ->assertDontSeeText('Private destination');
     }
@@ -49,12 +51,13 @@ class DashboardTest extends TestCase
             ->get(route('dashboard'))
             ->assertOk()
             ->assertSeeText('No upcoming rides')
-            ->assertSeeText('Plan your first ride');
+            ->assertSeeText('Plan your first ride')
+            ->assertSee('href="'.route('booking.create').'"', false);
     }
 
-    private function createBooking(User $customer, VehicleType $vehicleType, string $code, string $pickup, string $destination): void
+    private function createBooking(User $customer, VehicleType $vehicleType, string $code, string $pickup, string $destination): Booking
     {
-        Booking::create([
+        return Booking::create([
             'booking_code' => $code,
             'customer_id' => $customer->id,
             'pickup_address' => $pickup,

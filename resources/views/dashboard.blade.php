@@ -7,7 +7,7 @@
                     <h1>Welcome back, {{ $firstName }}.</h1>
                     <p>Your next ride is just a few details away.</p>
                 </div>
-                <a class="dashboard-primary" href="{{ url('/') }}#book">Book a ride <span>↗</span></a>
+                <a class="dashboard-primary" href="{{ route('booking.create') }}">Book a ride <span>↗</span></a>
             </section>
 
             <section class="dashboard-metrics" aria-label="Ride summary">
@@ -20,7 +20,7 @@
                 <section class="dashboard-trips">
                     <div class="dashboard-section-heading">
                         <div><p class="dashboard-eyebrow">Your travel plans</p><h2>Your bookings</h2></div>
-                        <a href="{{ url('/') }}#book">Book another <span>↗</span></a>
+                        <a href="{{ route('booking.create') }}">Book another <span>↗</span></a>
                     </div>
 
                     @if ($bookings->isEmpty())
@@ -28,7 +28,7 @@
                             <span class="dashboard-empty-mark">A</span>
                             <h3>No upcoming rides</h3>
                             <p>When you book a ride, its pickup details will appear here.</p>
-                            <a class="dashboard-primary" href="{{ url('/') }}#book">Plan your first ride <span>↗</span></a>
+                            <a class="dashboard-primary" href="{{ route('booking.create') }}">Plan your first ride <span>↗</span></a>
                         </div>
                     @else
                         <div class="dashboard-bookings">
@@ -41,6 +41,7 @@
                                     <div class="dashboard-route">
                                         <p><a href="{{ route('bookings.show', $booking) }}">{{ $booking->pickup_address }} <span>→</span> {{ $booking->destination_address }}</a></p>
                                         <span>{{ \Illuminate\Support\Carbon::parse($booking->booking_time)->format('g:i A') }} · {{ $booking->vehicleType->name }}</span>
+                                        <a class="dashboard-detail-link" href="{{ route('bookings.show', $booking) }}">View details · {{ $booking->booking_code }} <span aria-hidden="true">↗</span></a>
                                     </div>
                                     <div class="dashboard-booking-meta">
                                         <span class="dashboard-status" data-status="{{ $booking->status }}">{{ \Illuminate\Support\Str::headline($booking->status) }}</span>

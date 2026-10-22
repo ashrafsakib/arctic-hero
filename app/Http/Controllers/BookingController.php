@@ -30,7 +30,7 @@ class BookingController extends Controller
 
         return view('booking.create', [
             'vehicleTypes' => $vehicleTypes,
-            'vehicleData' => $vehicleTypes->map(fn (VehicleType $vehicle): array => [
+            'vehicleData' => $vehicleTypes->map(fn ($vehicle): array => [
                 'id' => $vehicle->id,
                 'name' => $vehicle->name,
                 'passenger_capacity' => $vehicle->passenger_capacity,
@@ -40,7 +40,7 @@ class BookingController extends Controller
                 'per_minute_rate' => (float) $vehicle->per_minute_rate,
             ])->values(),
             'locations' => $locations,
-            'locationData' => $locations->map(fn (Location $location): array => [
+            'locationData' => $locations->map(fn ($location): array => [
                 'name' => $location->name,
                 'address' => $location->address,
                 'latitude' => (float) $location->latitude,
