@@ -16,7 +16,7 @@
                 <a href="{{ url('/') }}#services">Services</a>
                 <a href="{{ route('fleet.index') }}">Our fleet</a>
                 <a href="{{ route('booking.create') }}">Book a ride</a>
-                <a href="{{ url('/') }}#locations">Oulu routes</a>
+                <a href="{{ route('routes.index') }}">Oulu routes</a>
                 <a href="{{ route('contact.index') }}" aria-current="page">Contact</a>
             </nav>
             <div class="header-actions">
@@ -28,7 +28,7 @@
                 <a href="{{ url('/') }}#services" @click="open = false">Services</a>
                 <a href="{{ route('fleet.index') }}" @click="open = false">Our fleet</a>
                 <a href="{{ route('booking.create') }}" @click="open = false">Book a ride</a>
-                <a href="{{ url('/') }}#locations" @click="open = false">Oulu routes</a>
+                <a href="{{ route('routes.index') }}" @click="open = false">Oulu routes</a>
                 <a href="{{ route('contact.index') }}" aria-current="page" @click="open = false">Contact</a>
             </nav>
         </div>

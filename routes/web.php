@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ContactSubmissionController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FleetController;
+use App\Http\Controllers\RoutesController;
 use App\Http\Controllers\Admin\VehicleController;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,7 @@ Route::get('/', function () {
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.send');
 Route::get('/fleet', [FleetController::class, 'index'])->name('fleet.index');
+Route::get('/routes', [RoutesController::class, 'index'])->name('routes.index');
 Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::get('/booking/complete', [BookingController::class, 'complete'])->middleware('auth')->name('booking.complete');

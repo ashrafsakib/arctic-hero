@@ -5,6 +5,7 @@ import '../css/dashboard.css';
 import '../css/booking.css';
 import '../css/fleet-page.css';
 import '../css/contact-page.css';
+import '../css/routes-page.css';
 
 import Alpine from 'alpinejs';
 
@@ -211,4 +212,63 @@ if (bookingForm) {
 
 	updateVehicles();
 	setStep(1);
+}
+
+const routesMapElement = document.getElementById('routes-map');
+
+if (routesMapElement && window.L) {
+	const locations = JSON.parse(document.querySelector('[data-route-locations]').textContent);
+	const map = window.L.map(routesMapElement).setView([65.0124, 25.4651], 12);
+	const markers = new Map();
+	let routeLine = null;
+
+	window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; OpenStreetMap contributors',
+		maxZoom: 19,
+	}).addTo(map);
+
+	locations.forEach((location) => {
+		const marker = window.L.circleMarker([location.latitude, location.longitude], {
+			radius: location.category === 'airport' ? 8 : 7,
+			color: '#171714',
+			weight: 2,
+			fillColor: location.category === 'airport' ? '#257460' : '#f5df00',
+			fillOpacity: 1,
+		}).addTo(map);
+		marker.bindPopup(`<strong>${location.name}</strong><br>${location.address}`);
+		markers.set(String(location.id), marker);
+	});
+
+	document.querySelectorAll('[data-route-location]').forEach((button) => {
+		button.addEventListener('click', () => {
+			const marker = markers.get(button.dataset.routeLocation);
+			if (!marker) return;
+			map.setView(marker.getLatLng(), 14, { animate: true });
+			marker.openPopup();
+			document.querySelectorAll('[data-route-location]').forEach((item) => {
+				const selected = item === button;
+				item.classList.toggle('is-selected', selected);
+				item.setAttribute('aria-pressed', String(selected));
+			});
+		});
+	});
+
+	document.querySelectorAll('[data-show-route]').forEach((button) => {
+		button.addEventListener('click', () => {
+			const routeCard = button.closest('[data-route-pair]');
+			const origin = markers.get(routeCard.dataset.originId);
+			const destination = markers.get(routeCard.dataset.destinationId);
+			if (!origin || !destination) return;
+			if (routeLine) map.removeLayer(routeLine);
+			routeLine = window.L.polyline([origin.getLatLng(), destination.getLatLng()], {
+				color: '#c6ad00',
+				weight: 4,
+				dashArray: '8 7',
+			}).addTo(map);
+			map.fitBounds(routeLine.getBounds(), { padding: [35, 35], maxZoom: 14, animate: true });
+			document.querySelectorAll('[data-show-route]').forEach((item) => {
+				item.setAttribute('aria-pressed', String(item === button));
+			});
+		});
+	});
 }

@@ -31,7 +31,7 @@
                 <nav class="desktop-nav" aria-label="Main navigation">
                     <a href="{{ url('/') }}#services">Services</a>
                     <a href="{{ url('/') }}#fleet">Our fleet</a>
-                    <a href="{{ url('/') }}#locations">Oulu routes</a>
+                    <a href="{{ route('routes.index') }}">Oulu routes</a>
                     <a href="{{ url('/') }}#contact">Contact</a>
                 </nav>
                 <div class="header-actions">
@@ -48,7 +48,7 @@
                 </div>
                 <button type="button" class="menu-toggle" @click="open = !open" :aria-expanded="open.toString()" aria-label="Toggle navigation"><span></span><span></span></button>
                 <nav x-cloak x-show="open" class="mobile-nav" aria-label="Mobile navigation">
-                    <a href="{{ url('/') }}#services" @click="open = false">Services</a><a href="{{ url('/') }}#fleet" @click="open = false">Our fleet</a><a href="{{ url('/') }}#locations" @click="open = false">Oulu routes</a><a href="{{ url('/') }}#contact" @click="open = false">Contact</a>
+                    <a href="{{ url('/') }}#services" @click="open = false">Services</a><a href="{{ route('fleet.index') }}" @click="open = false">Our fleet</a><a href="{{ route('routes.index') }}" @click="open = false">Oulu routes</a><a href="{{ route('contact.index') }}" @click="open = false">Contact</a>
                     @guest
                         <a href="{{ route('login') }}" @click="open = false">Log in</a>
                     @endguest
@@ -87,9 +87,9 @@
             <div class="footer-main">
                 <div class="footer-brand"><a href="{{ url('/') }}" class="brand light-brand"><span class="brand-mark"></span><span>ARCTIC <b>HERO</b></span></a><p>Your local taxi for city trips, airport runs and journeys around Oulu.</p></div>
                 <div class="footer-links">
-                    <div><p>Explore</p><a href="{{ url('/') }}#services">Ride options</a><a href="{{ url('/') }}#fleet">Our fleet</a><a href="{{ url('/') }}#locations">Oulu routes</a></div>
+                    <div><p>Explore</p><a href="{{ url('/') }}#services">Ride options</a><a href="{{ route('fleet.index') }}">Our fleet</a><a href="{{ route('routes.index') }}">Oulu routes</a></div>
                     <div><p>Account</p><a href="{{ route('login') }}">Log in</a><a href="{{ route('register') }}">Create account</a><a href="{{ url('/') }}#book">Book a taxi</a></div>
-                    <div><p>Contact</p><a href="mailto:{{ config('company.email') }}">{{ config('company.email') }}</a><a href="tel:{{ config('company.phone') }}">{{ config('company.phone') }}</a><a href="{{ url('/') }}#locations">Oulu, Finland</a></div>
+                    <div><p>Contact</p><a href="mailto:{{ config('company.email') }}">{{ config('company.email') }}</a><a href="tel:{{ config('company.phone') }}">{{ config('company.phone') }}</a><a href="{{ route('routes.index') }}">Oulu, Finland</a></div>
                 </div>
                 <div class="newsletter"><p>Need help planning?</p><span>Talk with our team about your next ride.</span><a class="footer-contact-link" href="mailto:{{ config('company.email') }}">Email Arctic Hero ↗</a></div>
             </div>
