@@ -5,7 +5,11 @@ namespace Tests\Feature;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\VehicleType;
+use App\Notifications\BookingSubmitted;
+use App\Services\Booking\BookingNotificationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class BookingFlowTest extends TestCase
@@ -16,6 +20,7 @@ class BookingFlowTest extends TestCase
     {
         $customer = User::factory()->create();
         $vehicleType = $this->createVehicleType();
+        Notification::fake();
 
         $response = $this->actingAs($customer)->post(route('booking.store'), $this->bookingData($vehicleType));
         $response->assertValid();
@@ -57,6 +62,9 @@ class BookingFlowTest extends TestCase
             ->assertOk()
             ->assertSeeText($booking->booking_code)
             ->assertSee('href="'.route('bookings.show', $booking).'"', false);
+
+        Notification::assertSentTo($customer, BookingSubmitted::class);
+        Notification::assertSentOnDemand(BookingSubmitted::class);
     }
 
     public function test_guest_booking_is_preserved_until_registration_and_confirmation(): void
@@ -103,6 +111,69 @@ class BookingFlowTest extends TestCase
             ->assertSessionHasErrors('vehicle_type_id');
 
         $this->assertDatabaseCount('bookings', 0);
+    }
+
+    public function test_route_provider_estimate_is_used_when_configured(): void
+    {
+        config(['services.routing.url' => 'https://router.example.test']);
+        Http::fake([
+            'router.example.test/route/v1/driving/*' => Http::response([
+                'code' => 'Ok',
+                'routes' => [['distance' => 4200, 'duration' => 600]],
+            ]),
+        ]);
+        $customer = User::factory()->create();
+        $vehicleType = $this->createVehicleType();
+
+        $this->actingAs($customer)
+            ->post(route('booking.store'), $this->bookingData($vehicleType))
+            ->assertRedirect(route('booking.complete'));
+        $this->get(route('booking.complete'))->assertRedirect();
+
+        $booking = Booking::query()->firstOrFail();
+        $this->assertSame(4.2, (float) $booking->distance_km);
+        $this->assertSame(10, $booking->estimated_duration_minutes);
+        $this->assertSame(6.3, (float) $booking->distance_fare);
+        $this->assertSame(2.0, (float) $booking->time_fare);
+        $this->assertSame(18.3, (float) $booking->total_fare);
+        Http::assertSent(fn ($request): bool => str_contains($request->url(), '/route/v1/driving/'));
+    }
+
+    public function test_unavailable_route_provider_falls_back_to_the_local_estimate(): void
+    {
+        config(['services.routing.url' => 'https://router.example.test']);
+        Http::fake(['router.example.test/*' => Http::response([], 503)]);
+        $customer = User::factory()->create();
+        $vehicleType = $this->createVehicleType();
+
+        $this->actingAs($customer)
+            ->post(route('booking.store'), $this->bookingData($vehicleType))
+            ->assertRedirect(route('booking.complete'));
+        $this->get(route('booking.complete'))->assertRedirect();
+
+        $booking = Booking::query()->firstOrFail();
+        $this->assertGreaterThan(0, (float) $booking->distance_km);
+        $this->assertGreaterThan(0, $booking->estimated_duration_minutes);
+    }
+
+    public function test_saved_booking_shows_a_warning_when_notifications_cannot_be_sent(): void
+    {
+        $customer = User::factory()->create();
+        $vehicleType = $this->createVehicleType();
+        $this->mock(BookingNotificationService::class, function ($mock): void {
+            $mock->shouldReceive('send')->once()->andReturn(false);
+        });
+
+        $this->actingAs($customer)
+            ->post(route('booking.store'), $this->bookingData($vehicleType))
+            ->assertRedirect(route('booking.complete'));
+        $this->get(route('booking.complete'))
+            ->assertRedirect(route('booking.confirmation', Booking::query()->firstOrFail()));
+
+        $this->get(route('booking.confirmation', Booking::query()->firstOrFail()))
+            ->assertOk()
+            ->assertSeeText('Your booking was saved, but we could not send its email notification.');
+        $this->assertDatabaseCount('bookings', 1);
     }
 
     private function createVehicleType(): VehicleType

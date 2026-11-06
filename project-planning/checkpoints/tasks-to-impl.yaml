@@ -1,0 +1,177 @@
+metadata:
+  generated: "2026-11-07"
+  source_tasks: "project-planning/task-breakdown.md"
+  last_updated: "2026-11-07"
+
+summary:
+  total_tasks: 4
+  completed_tasks: 4
+  in_progress_tasks: 0
+  pending_tasks: 0
+  completion_percentage: 100.0
+
+tasks:
+  - task_id: "A-06"
+    description: "Extract routing/fare services; provider fallback and booking notifications"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Services/Booking/RouteEstimator.php"
+          changes:
+            - change_type: "added"
+              description: "Use an optional routing provider and the existing local estimator as fallback."
+        - file: "app/Services/Booking/FareCalculator.php"
+          changes:
+            - change_type: "added"
+              description: "Centralize fare breakdown calculation."
+        - file: "app/Services/Booking/BookingNotificationService.php"
+          changes:
+            - change_type: "added"
+              description: "Deliver customer and company booking notifications with explicit failure reporting."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 60
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-06"
+      requirements: []
+      full_trace: "A-06 -> task-breakdown.md -> booking services and notification integration -> BookingFlowTest"
+  - task_id: "A-08"
+    description: "Customer cancellation request workflow and transition validation"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Http/Controllers/BookingController.php"
+          changes:
+            - change_type: "modified"
+              description: "Record eligible customer requests and status history transactionally."
+        - file: "app/Http/Controllers/Admin/BookingController.php"
+          changes:
+            - change_type: "modified"
+              description: "Allow admin approval or decline with locked transition validation."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 60
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-08"
+      requirements: []
+      full_trace: "A-08 -> task-breakdown.md -> customer/admin cancellation workflow -> CustomerBookingActionsTest"
+  - task_id: "A-09"
+    description: "Review submission, persistence, and eligibility validation"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Http/Controllers/BookingController.php"
+          changes:
+            - change_type: "modified"
+              description: "Validate owner and completed status, then persist a single review."
+        - file: "resources/views/booking/show.blade.php"
+          changes:
+            - change_type: "modified"
+              description: "Show eligible review form and saved review."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 60
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-09"
+      requirements: []
+      full_trace: "A-09 -> task-breakdown.md -> review workflow -> CustomerBookingActionsTest"
+  - task_id: "A-10"
+    description: "Phone normalization and profile/registration validation"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Support/PhoneNumber.php"
+          changes:
+            - change_type: "added"
+              description: "Normalize Finland-local and international input to E.164."
+        - file: "app/Http/Requests/ProfileUpdateRequest.php"
+          changes:
+            - change_type: "modified"
+              description: "Normalize and validate profile phone input."
+        - file: "app/Http/Controllers/Auth/RegisteredUserController.php"
+          changes:
+            - change_type: "modified"
+              description: "Normalize and validate registration phone input."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 60
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-10"
+      requirements: []
+      full_trace: "A-10 -> task-breakdown.md -> profile and registration validation -> RegistrationTest and ProfileTest"
+
+pending_tasks: []
+untracked_changes: []
+traceability_chain:
+  - chain_id: "A-06"
+    requirement: "A-06"
+    plan_phase: "Booking services"
+    plan_item: "A-06"
+    tasks: ["A-06"]
+    files:
+      - "app/Services/Booking/RouteEstimator.php"
+      - "app/Services/Booking/FareCalculator.php"
+      - "app/Services/Booking/BookingNotificationService.php"
+    status: "complete"
+  - chain_id: "A-08"
+    requirement: "A-08"
+    plan_phase: "Customer booking lifecycle"
+    plan_item: "A-08"
+    tasks: ["A-08"]
+    files:
+      - "app/Http/Controllers/BookingController.php"
+      - "app/Http/Controllers/Admin/BookingController.php"
+    status: "complete"
+  - chain_id: "A-09"
+    requirement: "A-09"
+    plan_phase: "Customer booking lifecycle"
+    plan_item: "A-09"
+    tasks: ["A-09"]
+    files:
+      - "app/Http/Controllers/BookingController.php"
+      - "resources/views/booking/show.blade.php"
+    status: "complete"
+  - chain_id: "A-10"
+    requirement: "A-10"
+    plan_phase: "Account validation"
+    plan_item: "A-10"
+    tasks: ["A-10"]
+    files:
+      - "app/Support/PhoneNumber.php"
+      - "app/Http/Requests/ProfileUpdateRequest.php"
+      - "app/Http/Controllers/Auth/RegisteredUserController.php"
+    status: "complete"
+validation:
+  passed: true
+  errors: []
+  warnings:
+    - "Implementation is locally verified but not merged; project-planning/task-breakdown.md preserves the merge gate and completion credits."
+  blocking_issues: []

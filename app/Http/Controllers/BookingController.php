@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
-use App\Models\BookingStatusHistory;
 use App\Models\Location;
 use App\Models\VehicleType;
+use App\Services\Booking\BookingNotificationService;
+use App\Services\Booking\FareCalculator;
+use App\Services\Booking\RouteEstimator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -78,7 +80,7 @@ class BookingController extends Controller
 
         if ($data['passengers'] > $vehicleType->passenger_capacity || $data['luggage_count'] > $vehicleType->luggage_capacity) {
             throw ValidationException::withMessages([
-            'vehicle_type_id' => 'Choose a vehicle with enough seats and luggage space.',
+                'vehicle_type_id' => 'Choose a vehicle with enough seats and luggage space.',
             ]);
         }
 
@@ -91,8 +93,12 @@ class BookingController extends Controller
         return redirect()->route('booking.complete');
     }
 
-    public function complete(Request $request): RedirectResponse
-    {
+    public function complete(
+        Request $request,
+        RouteEstimator $routeEstimator,
+        FareCalculator $fareCalculator,
+        BookingNotificationService $bookingNotifications,
+    ): RedirectResponse {
         $data = $request->session()->pull('booking_draft');
 
         if (! is_array($data)) {
@@ -105,21 +111,18 @@ class BookingController extends Controller
 
         if ($data['passengers'] > $vehicleType->passenger_capacity || $data['luggage_count'] > $vehicleType->luggage_capacity) {
             return redirect()->route('booking.create')
-            ->withErrors(['vehicle_type_id' => 'That vehicle no longer has enough seats and luggage space.']);
+                ->withErrors(['vehicle_type_id' => 'That vehicle no longer has enough seats and luggage space.']);
         }
 
-        $distance = $this->estimateDistance(
+        $route = $routeEstimator->estimate(
             (float) $data['pickup_lat'],
             (float) $data['pickup_lng'],
             (float) $data['destination_lat'],
             (float) $data['destination_lng'],
         );
-        $duration = max(1, (int) ceil($distance / 35 * 60));
-        $baseFare = (float) $vehicleType->base_fare;
-        $distanceFare = round($distance * (float) $vehicleType->per_km_rate, 2);
-        $timeFare = round($duration * (float) $vehicleType->per_minute_rate, 2);
+        $fare = $fareCalculator->calculate($vehicleType, $route['distance_km'], $route['duration_minutes']);
 
-        $booking = DB::transaction(function () use ($request, $data, $vehicleType, $distance, $duration, $baseFare, $distanceFare, $timeFare): Booking {
+        $booking = DB::transaction(function () use ($request, $data, $vehicleType, $route, $fare): Booking {
             $booking = Booking::create([
                 'booking_code' => 'AH-'.Str::upper(Str::random(8)),
                 'customer_id' => $request->user()->id,
@@ -134,13 +137,13 @@ class BookingController extends Controller
                 'passengers' => $data['passengers'],
                 'luggage_count' => $data['luggage_count'],
                 'vehicle_type_id' => $vehicleType->id,
-                'distance_km' => $distance,
-                'estimated_duration_minutes' => $duration,
-                'base_fare' => $baseFare,
-                'distance_fare' => $distanceFare,
-                'time_fare' => $timeFare,
+                'distance_km' => $route['distance_km'],
+                'estimated_duration_minutes' => $route['duration_minutes'],
+                'base_fare' => $fare['base_fare'],
+                'distance_fare' => $fare['distance_fare'],
+                'time_fare' => $fare['time_fare'],
                 'extra_charge' => 0,
-                'total_fare' => round($baseFare + $distanceFare + $timeFare, 2),
+                'total_fare' => $fare['total_fare'],
                 'status' => Booking::PENDING,
                 'customer_notes' => $data['customer_notes'] ?? null,
             ]);
@@ -155,7 +158,13 @@ class BookingController extends Controller
             return $booking;
         });
 
-        return redirect()->route('booking.confirmation', $booking);
+        $response = redirect()->route('booking.confirmation', $booking);
+
+        if (! $bookingNotifications->send($booking)) {
+            $response->with('notification_warning', 'Your booking was saved, but we could not send its email notification. Please contact us if you do not receive a confirmation.');
+        }
+
+        return $response;
     }
 
     public function confirmation(Request $request, Booking $booking): View
@@ -172,21 +181,77 @@ class BookingController extends Controller
         abort_unless($booking->customer_id === $request->user()->id, 404);
 
         return view('booking.show', [
-            'booking' => $booking->load('vehicleType'),
+            'booking' => $booking->load(['vehicleType', 'review']),
             'statusHistories' => $booking->statusHistories()
                 ->orderBy('created_at')
                 ->get(['id', 'booking_id', 'status', 'created_at']),
         ]);
     }
 
-    private function estimateDistance(float $startLat, float $startLng, float $endLat, float $endLng): float
+    public function requestCancellation(Request $request, Booking $booking): RedirectResponse
     {
-        $toRadians = static fn (float $degrees): float => deg2rad($degrees);
-        $latitudeDelta = $toRadians($endLat - $startLat);
-        $longitudeDelta = $toRadians($endLng - $startLng);
-        $value = sin($latitudeDelta / 2) ** 2
-            + cos($toRadians($startLat)) * cos($toRadians($endLat)) * sin($longitudeDelta / 2) ** 2;
+        abort_unless($booking->customer_id === $request->user()->id, 404);
 
-        return max(1, round(6371 * 2 * atan2(sqrt($value), sqrt(1 - $value)) * 1.25, 2));
+        $data = $request->validate([
+            'reason' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        DB::transaction(function () use ($request, $booking, $data): void {
+            $lockedBooking = Booking::query()->lockForUpdate()->findOrFail($booking->id);
+            abort_unless($lockedBooking->customer_id === $request->user()->id, 404);
+
+            if (! $lockedBooking->canCustomerRequestCancellation()) {
+                throw ValidationException::withMessages([
+                    'cancellation' => 'This booking can no longer be cancelled online.',
+                ]);
+            }
+
+            $lockedBooking->update(['status' => Booking::CANCELLATION_REQUESTED]);
+            $lockedBooking->statusHistories()->create([
+                'status' => Booking::CANCELLATION_REQUESTED,
+                'changed_by' => $request->user()->id,
+                'notes' => $data['reason'] ?? 'Cancellation requested by customer.',
+                'created_at' => now(),
+            ]);
+        });
+
+        return redirect()->route('bookings.show', $booking)
+            ->with('success', 'Your cancellation request has been sent for review.');
+    }
+
+    public function storeReview(Request $request, Booking $booking): RedirectResponse
+    {
+        abort_unless($booking->customer_id === $request->user()->id, 404);
+
+        $data = $request->validate([
+            'rating' => ['required', 'integer', 'between:1,5'],
+            'comment' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        DB::transaction(function () use ($request, $booking, $data): void {
+            $lockedBooking = Booking::query()->lockForUpdate()->findOrFail($booking->id);
+            abort_unless($lockedBooking->customer_id === $request->user()->id, 404);
+
+            if (! $lockedBooking->canCustomerSubmitReview()) {
+                throw ValidationException::withMessages([
+                    'review' => 'You can review a booking after it has been completed.',
+                ]);
+            }
+
+            if ($lockedBooking->review()->exists()) {
+                throw ValidationException::withMessages([
+                    'review' => 'A review has already been submitted for this booking.',
+                ]);
+            }
+
+            $lockedBooking->review()->create([
+                'customer_id' => $request->user()->id,
+                'rating' => $data['rating'],
+                'comment' => $data['comment'] ?? null,
+            ]);
+        });
+
+        return redirect()->route('bookings.show', $booking)
+            ->with('success', 'Thank you for sharing your feedback.');
     }
 }

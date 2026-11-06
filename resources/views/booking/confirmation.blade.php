@@ -12,6 +12,9 @@
         <div class="booking-header-actions"><span>Oulu, Finland</span><a href="{{ route('dashboard') }}">Dashboard</a></div>
     </header>
     <main class="booking-confirmation">
+        @if (session('notification_warning'))
+            <p role="alert">{{ session('notification_warning') }}</p>
+        @endif
         <div class="confirmation-mark" aria-hidden="true">✓</div>
         <p class="booking-eyebrow">REQUEST RECEIVED · {{ $booking->booking_code }}</p>
         <h1>Your ride is in motion.</h1>

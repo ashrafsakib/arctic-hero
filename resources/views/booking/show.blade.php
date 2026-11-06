@@ -2,6 +2,8 @@
     <div class="customer-dashboard">
         <div class="dashboard-wrap">
             <div class="booking-customer-back"><a href="{{ route('dashboard') }}">← My rides</a></div>
+            @if (session('success'))<p class="booking-customer-panel" role="status">{{ session('success') }}</p>@endif
+            @if ($errors->any())<p class="booking-customer-panel" role="alert">{{ $errors->first() }}</p>@endif
             <section class="booking-customer-heading">
                 <div><p class="dashboard-eyebrow">Booking {{ $booking->booking_code }}</p><h1>Ride details</h1><p>{{ $booking->booking_date->format('l, M j, Y') }} · {{ \Illuminate\Support\Carbon::parse($booking->booking_time)->format('g:i A') }}</p></div>
                 <span class="dashboard-status" data-status="{{ $booking->status }}">{{ \Illuminate\Support\Str::headline($booking->status) }}</span>
@@ -21,6 +23,49 @@
                     <div class="booking-customer-help"><span>Need help with this ride?</span><a href="mailto:{{ config('company.email') }}?subject={{ rawurlencode('Booking '.$booking->booking_code) }}">{{ config('company.email') }}</a><a href="tel:{{ config('company.phone') }}">{{ config('company.phone') }}</a></div>
                 </section>
             </div>
+
+            @if ($booking->canCustomerRequestCancellation())
+                <section class="booking-customer-panel" aria-labelledby="cancellation-heading">
+                    <div class="dashboard-section-heading"><div><p class="dashboard-eyebrow">Plans changed?</p><h2 id="cancellation-heading">Request cancellation</h2></div></div>
+                    <p>Our team will review your request and update this booking's status.</p>
+                    <form class="mt-4 space-y-3" action="{{ route('bookings.cancellation.store', $booking) }}" method="post">
+                        @csrf
+                        <label class="block">Reason (optional)
+                            <textarea class="mt-1 block w-full" name="reason" rows="3" maxlength="2000">{{ old('reason') }}</textarea>
+                        </label>
+                        <button class="booking-next" type="submit">Send cancellation request</button>
+                    </form>
+                </section>
+            @elseif ($booking->status === \App\Models\Booking::CANCELLATION_REQUESTED)
+                <p class="booking-customer-panel" role="status">Your cancellation request is waiting for review.</p>
+            @endif
+
+            @if ($booking->canCustomerSubmitReview() && ! $booking->review)
+                <section class="booking-customer-panel" aria-labelledby="review-heading">
+                    <div class="dashboard-section-heading"><div><p class="dashboard-eyebrow">Share your experience</p><h2 id="review-heading">Review your ride</h2></div></div>
+                    <form class="mt-4 space-y-3" action="{{ route('bookings.review.store', $booking) }}" method="post">
+                        @csrf
+                        <label class="block">Rating
+                            <select class="mt-1 block w-full" name="rating" required>
+                                <option value="">Select a rating</option>
+                                @for ($rating = 5; $rating >= 1; $rating--)
+                                    <option value="{{ $rating }}" @selected(old('rating') == $rating)>{{ $rating }} {{ $rating === 1 ? 'star' : 'stars' }}</option>
+                                @endfor
+                            </select>
+                        </label>
+                        <label class="block">Comment (optional)
+                            <textarea class="mt-1 block w-full" name="comment" rows="4" maxlength="2000">{{ old('comment') }}</textarea>
+                        </label>
+                        <button class="booking-next" type="submit">Submit review</button>
+                    </form>
+                </section>
+            @elseif ($booking->review)
+                <section class="booking-customer-panel" aria-labelledby="review-heading">
+                    <div class="dashboard-section-heading"><div><p class="dashboard-eyebrow">Thanks for your feedback</p><h2 id="review-heading">Your review</h2></div></div>
+                    <p>{{ $booking->review->rating }} / 5 stars</p>
+                    @if ($booking->review->comment)<p>{{ $booking->review->comment }}</p>@endif
+                </section>
+            @endif
         </div>
     </div>
 </x-app-layout>

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -35,5 +36,44 @@ class RegistrationTest extends TestCase
             ->assertOk()
             ->assertSeeText('Welcome back, Test')
             ->assertSeeText('test@example.com');
+    }
+
+    public function test_registration_normalizes_a_finnish_phone_number(): void
+    {
+        $this->post('/register', [
+            'name' => 'Aino Korhonen',
+            'phone' => '040 123 4567',
+            'email' => 'aino@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])->assertRedirect(route('dashboard', absolute: false));
+
+        $this->assertSame('+358401234567', User::query()->where('email', 'aino@example.com')->value('phone'));
+    }
+
+    public function test_registration_rejects_an_invalid_phone_number(): void
+    {
+        $this->from('/register')->post('/register', [
+            'name' => 'Aino Korhonen',
+            'phone' => 'not a phone number',
+            'email' => 'aino@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])->assertSessionHasErrors('phone');
+
+        $this->assertDatabaseMissing('users', ['email' => 'aino@example.com']);
+    }
+
+    public function test_registration_validates_non_string_phone_input_without_throwing(): void
+    {
+        $this->from('/register')->post('/register', [
+            'name' => 'Aino Korhonen',
+            'phone' => ['040', '1234567'],
+            'email' => 'aino@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])->assertSessionHasErrors('phone');
+
+        $this->assertDatabaseMissing('users', ['email' => 'aino@example.com']);
     }
 }

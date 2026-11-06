@@ -20,6 +20,7 @@ class BookingController extends Controller
         Booking::REJECTED,
         Booking::COMPLETED,
         Booking::CANCELLED,
+        Booking::CANCELLATION_REQUESTED,
     ];
 
     public function index(Request $request): View
@@ -67,7 +68,7 @@ class BookingController extends Controller
             'booking' => $booking->load(['customer', 'vehicleType', 'statusHistories.changedBy']),
             'availableStatuses' => array_values(array_unique([
                 $booking->status,
-                ...$this->transitionsFor($booking->status),
+                ...$this->transitionsFor($booking),
             ])),
         ]);
     }
@@ -80,27 +81,31 @@ class BookingController extends Controller
         ]);
 
         $nextStatus = $data['status'];
-        $previousStatus = $booking->status;
-        if ($nextStatus !== $previousStatus && ! in_array($nextStatus, $this->transitionsFor($previousStatus), true)) {
-            throw ValidationException::withMessages([
-                'status' => 'That booking status transition is not allowed.',
-            ]);
-        }
+        $previousStatus = DB::transaction(function () use ($booking, $data, $nextStatus, $request): string {
+            $lockedBooking = Booking::query()->lockForUpdate()->findOrFail($booking->id);
+            $previousStatus = $lockedBooking->status;
 
-        DB::transaction(function () use ($booking, $data, $nextStatus, $previousStatus, $request): void {
-            $booking->update([
+            if ($nextStatus !== $previousStatus && ! in_array($nextStatus, $this->transitionsFor($lockedBooking), true)) {
+                throw ValidationException::withMessages([
+                    'status' => 'That booking status transition is not allowed.',
+                ]);
+            }
+
+            $lockedBooking->update([
                 'status' => $nextStatus,
                 'admin_notes' => $data['admin_notes'] ?? null,
             ]);
 
             if ($nextStatus !== $previousStatus) {
-                $booking->statusHistories()->create([
+                $lockedBooking->statusHistories()->create([
                     'status' => $nextStatus,
                     'changed_by' => $request->user()->id,
                     'notes' => $data['admin_notes'] ?? null,
                     'created_at' => now(),
                 ]);
             }
+
+            return $previousStatus;
         });
 
         return redirect()->route('admin.bookings.show', $booking)
@@ -108,12 +113,19 @@ class BookingController extends Controller
     }
 
     /** @return list<string> */
-    private function transitionsFor(string $status): array
+    private function transitionsFor(Booking $booking): array
     {
-        return match ($status) {
+        return match ($booking->status) {
             Booking::PENDING => [Booking::CONTACTED, Booking::CONFIRMED, Booking::REJECTED, Booking::CANCELLED],
             Booking::CONTACTED => [Booking::CONFIRMED, Booking::REJECTED, Booking::CANCELLED],
             Booking::CONFIRMED => [Booking::COMPLETED, Booking::CANCELLED],
+            Booking::CANCELLATION_REQUESTED => [
+                Booking::CANCELLED,
+                $booking->statusHistories()
+                    ->where('status', '!=', Booking::CANCELLATION_REQUESTED)
+                    ->orderByDesc('id')
+                    ->value('status') ?? Booking::PENDING,
+            ],
             default => [],
         };
     }

@@ -61,6 +61,38 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
+    public function test_profile_phone_is_normalized_when_updated(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch('/profile', [
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => '+358 (40) 123-4567',
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile');
+
+        $this->assertSame('+358401234567', $user->fresh()->phone);
+    }
+
+    public function test_profile_rejects_an_invalid_phone_number(): void
+    {
+        $user = User::factory()->create(['phone' => '+358401234567']);
+
+        $this->actingAs($user)
+            ->from('/profile')
+            ->patch('/profile', [
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => 'invalid',
+            ])
+            ->assertSessionHasErrors('phone');
+
+        $this->assertSame('+358401234567', $user->fresh()->phone);
+    }
+
     public function test_user_can_delete_their_account(): void
     {
         $user = User::factory()->create();

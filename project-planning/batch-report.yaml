@@ -1,0 +1,150 @@
+batch_id: "A06-A10"
+completed_tasks: ["A-06", "A-08", "A-09", "A-10"]
+blocked_tasks: []
+required_endpoints: []
+files_changed:
+  A-06:
+    - file: "app/Services/Booking/RouteEstimator.php"
+      change_type: "created"
+      description: "Use an optional OSRM-compatible provider and retain the prior local estimate as a fallback."
+    - file: "app/Services/Booking/FareCalculator.php"
+      change_type: "created"
+      description: "Centralize server-side fare calculation."
+    - file: "app/Services/Booking/BookingNotificationService.php"
+      change_type: "created"
+      description: "Notify the customer and company; report delivery failures to the confirmation page."
+    - file: "app/Notifications/BookingSubmitted.php"
+      change_type: "created"
+      description: "Send customer database/email and company email booking notifications."
+    - file: "app/Http/Controllers/BookingController.php"
+      change_type: "modified"
+      description: "Delegate route and fare calculation and send notifications after booking creation."
+    - file: "config/services.php"
+      change_type: "modified"
+      description: "Configure the optional routing provider URL."
+    - file: ".env.example"
+      change_type: "modified"
+      description: "Document ROUTING_PROVIDER_URL."
+    - file: "resources/views/booking/confirmation.blade.php"
+      change_type: "modified"
+      description: "Show an explicit warning when notification delivery fails."
+    - file: "tests/Feature/BookingFlowTest.php"
+      change_type: "modified"
+      description: "Verify estimate fallback/provider use, fare totals, notifications, and delivery warnings."
+  A-08:
+    - file: "app/Models/Booking.php"
+      change_type: "modified"
+      description: "Define cancellation-request status and customer cancellation eligibility."
+    - file: "app/Http/Controllers/BookingController.php"
+      change_type: "modified"
+      description: "Record customer cancellation requests and status history transactionally."
+    - file: "app/Http/Controllers/Admin/BookingController.php"
+      change_type: "modified"
+      description: "Allow admins to approve or decline requests with validated, locked status transitions."
+    - file: "routes/web.php"
+      change_type: "modified"
+      description: "Register the authenticated cancellation-request endpoint."
+    - file: "resources/views/booking/show.blade.php"
+      change_type: "modified"
+      description: "Provide the cancellation form and request-pending state."
+    - file: "tests/Feature/CustomerBookingActionsTest.php"
+      change_type: "created"
+      description: "Verify customer request, admin decision, and ineligible cancellation."
+  A-09:
+    - file: "app/Http/Controllers/BookingController.php"
+      change_type: "modified"
+      description: "Persist one owner-only review per completed booking with rating/comment validation."
+    - file: "routes/web.php"
+      change_type: "modified"
+      description: "Register the authenticated review endpoint."
+    - file: "resources/views/booking/show.blade.php"
+      change_type: "modified"
+      description: "Show the eligible review form and submitted review."
+    - file: "tests/Feature/CustomerBookingActionsTest.php"
+      change_type: "created"
+      description: "Verify review eligibility, ownership, display, and duplicate prevention."
+  A-10:
+    - file: "app/Support/PhoneNumber.php"
+      change_type: "created"
+      description: "Normalize Finnish local and international phone input to E.164 form."
+    - file: "app/Http/Controllers/Auth/RegisteredUserController.php"
+      change_type: "modified"
+      description: "Normalize and validate phone numbers during registration."
+    - file: "app/Http/Requests/ProfileUpdateRequest.php"
+      change_type: "modified"
+      description: "Normalize and validate optional profile phone numbers."
+    - file: "resources/views/profile/partials/update-profile-information-form.blade.php"
+      change_type: "modified"
+      description: "Expose phone editing and field errors in the profile form."
+    - file: "tests/Feature/Auth/RegistrationTest.php"
+      change_type: "modified"
+      description: "Verify phone normalization and invalid input handling."
+    - file: "tests/Feature/ProfileTest.php"
+      change_type: "modified"
+      description: "Verify profile phone normalization and validation."
+upstream_artifacts_consumed:
+  A-06:
+    - artifact: "project-planning/task-breakdown.md"
+      used_for: "A-06 scope and acceptance intent."
+  A-08:
+    - artifact: "project-planning/task-breakdown.md"
+      used_for: "A-08 scope and acceptance intent."
+  A-09:
+    - artifact: "project-planning/task-breakdown.md"
+      used_for: "A-09 scope and acceptance intent."
+  A-10:
+    - artifact: "project-planning/task-breakdown.md"
+      used_for: "A-10 scope and acceptance intent."
+evidence_mapping:
+  A-06:
+    - upstream: "task-breakdown.md#A-06"
+      output: "RouteEstimator, FareCalculator, BookingNotificationService"
+      evidence: "BookingFlowTest provider/fallback/fare/notification assertions pass."
+  A-08:
+    - upstream: "task-breakdown.md#A-08"
+      output: "BookingController cancellation workflow and admin status transitions"
+      evidence: "CustomerBookingActionsTest cancellation approval, decline, and eligibility assertions pass."
+  A-09:
+    - upstream: "task-breakdown.md#A-09"
+      output: "BookingController review workflow and customer booking view"
+      evidence: "CustomerBookingActionsTest owner, completion, persistence, and duplicate assertions pass."
+  A-10:
+    - upstream: "task-breakdown.md#A-10"
+      output: "PhoneNumber, registration, and profile validation"
+      evidence: "RegistrationTest and ProfileTest normalization and validation assertions pass."
+traceability:
+  - requirement: "A-06: Routing/fare services, provider fallback, and booking notifications"
+    plan_item: "A-06"
+    task: "A-06"
+    files: ["app/Services/Booking/RouteEstimator.php", "app/Services/Booking/FareCalculator.php", "app/Services/Booking/BookingNotificationService.php"]
+    status: "implemented and locally verified; merge pending"
+  - requirement: "A-08: Customer cancellation request and transition validation"
+    plan_item: "A-08"
+    task: "A-08"
+    files: ["app/Http/Controllers/BookingController.php", "app/Http/Controllers/Admin/BookingController.php", "resources/views/booking/show.blade.php"]
+    status: "implemented and locally verified; merge pending"
+  - requirement: "A-09: Review submission, persistence, and eligibility"
+    plan_item: "A-09"
+    task: "A-09"
+    files: ["app/Http/Controllers/BookingController.php", "resources/views/booking/show.blade.php"]
+    status: "implemented and locally verified; merge pending"
+  - requirement: "A-10: Phone normalization and profile/registration validation"
+    plan_item: "A-10"
+    task: "A-10"
+    files: ["app/Support/PhoneNumber.php", "app/Http/Controllers/Auth/RegisteredUserController.php", "app/Http/Requests/ProfileUpdateRequest.php"]
+    status: "implemented and locally verified; merge pending"
+protocol_violation: false
+errors: []
+warnings:
+  - "No feature specification, constitution, or implementation plan was present; task-breakdown.md defined the scope."
+  - "Changes are locally verified but not committed or merged; planning completion credits remain unchanged."
+test_results:
+  batch:
+    command: "php artisan test"
+    passed: 60
+    failed: 0
+    skipped: 0
+    failures: []
+quality_checks:
+  - command: "vendor\\bin\\pint --test <changed PHP files>"
+    result: "passed"

@@ -25,6 +25,8 @@ Route::post('/booking', [BookingController::class, 'store'])->name('booking.stor
 Route::get('/booking/complete', [BookingController::class, 'complete'])->middleware('auth')->name('booking.complete');
 Route::get('/booking/{booking}/confirmation', [BookingController::class, 'confirmation'])->middleware('auth')->name('booking.confirmation');
 Route::get('/my/bookings/{booking}', [BookingController::class, 'show'])->middleware('auth')->name('bookings.show');
+Route::post('/my/bookings/{booking}/cancellation', [BookingController::class, 'requestCancellation'])->middleware('auth')->name('bookings.cancellation.store');
+Route::post('/my/bookings/{booking}/review', [BookingController::class, 'storeReview'])->middleware('auth')->name('bookings.review.store');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();

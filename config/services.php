@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'routing' => [
+        'url' => env('ROUTING_PROVIDER_URL'),
+    ],
+
 ];

@@ -76,13 +76,13 @@ The checked-in local `.env` uses SQLite so the project can be started without a 
 - `app/Models`: Eloquent entities and relationships
 - `app/Http/Controllers`: thin HTTP controllers, with admin controllers under `Admin`
 - `app/Http/Requests`: request validation
-- `app/Services`: business workflows such as fare, routing, and booking services (next implementation phase)
+- `app/Services`: planned home for dedicated fare, routing, and booking workflows
 - `app/Policies`: resource authorization (next implementation phase)
 - `database/migrations`: schema and indexes
 - `database/seeders`: Oulu-oriented demo data
 - `resources/views`: Blade pages and Breeze layouts
 
-The core booking lifecycle is `pending -> contacted -> confirmed -> completed`. Rejection and cancellation are controlled terminal paths. Every transition will be written to `booking_status_histories` by `BookingService` in the booking-engine phase.
+The booking flow creates pending requests and records status changes in `booking_status_histories`. The admin booking workbench supports the current lifecycle `pending -> contacted -> confirmed -> completed`, plus rejection and cancellation. A dedicated `BookingService` extraction and customer cancellation workflow remain planned.
 
 ## Database Design
 
@@ -96,13 +96,15 @@ The core booking lifecycle is `pending -> contacted -> confirmed -> completed`. 
 - `pricing_rules`: extensible extra-charge rules
 - `notifications`: Laravel database notifications
 
-## Planned Next Phase
+## Remaining Work
 
-The next increment is the guest multi-step booking flow: session preservation through login/registration, modular route calculation with a fallback, `FareCalculationService`, `BookingService`, status-transition validation, and feature tests for those workflows.
+The multi-step booking flow, guest session preservation, server-side fare estimate, booking creation, admin status management, customer booking details, and Oulu routes page are implemented. Remaining work includes dedicated fare/routing services, configurable road routing and geocoding, customer cancellation and reviews, admin pricing/location/review/settings/report screens, and final accessibility/integration testing.
+
+See [project-planning/task-breakdown.md](project-planning/task-breakdown.md) for the Git-reconciled task breakdown and per-member 200-hour plan. The completion-hour allocation there is an estimate; use individual time logs for actual hours.
 
 ## Maps and Routing
 
-The planned map layer uses Leaflet and OpenStreetMap. Geocoding/routing providers will be isolated behind `RouteService` and configured through environment variables, with a deterministic fallback for development when external services are unavailable.
+The public route explorer uses Leaflet and OpenStreetMap with active location records. Current route distances are approximate estimates based on map coordinates; configurable road-routing/geocoding providers behind `RouteService` remain future work.
 
 ## Production Notes
 
