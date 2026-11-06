@@ -15,6 +15,7 @@
         <a class="{{ request()->routeIs('admin.reviews.*') ? 'is-current' : '' }}" href="{{ route('admin.reviews.index') }}"><span aria-hidden="true">07</span>Review moderation</a>
         <a class="{{ request()->routeIs('admin.reports.*') ? 'is-current' : '' }}" href="{{ route('admin.reports.index') }}"><span aria-hidden="true">08</span>Reports</a>
         <a class="{{ request()->routeIs('admin.settings.*') ? 'is-current' : '' }}" href="{{ route('admin.settings.edit') }}"><span aria-hidden="true">09</span>Company settings</a>
+        <a class="{{ request()->routeIs('admin.customers.*') ? 'is-current' : '' }}" href="{{ route('admin.customers.index') }}"><span aria-hidden="true">10</span>Customers</a>
     </nav>
 
     <div class="admin-sidebar-footer">

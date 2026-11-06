@@ -60,7 +60,7 @@
             <div class="contact-form-panel">
                 <div class="contact-form-heading"><p class="contact-eyebrow">Send us a note</p><h2>What’s on your mind?</h2><p>Fields marked <b>*</b> are required.</p></div>
                 @if (session('contact_sent'))
-                    <div class="contact-success" role="status"><strong>Message received.</strong><span>Thanks for getting in touch. Our team will follow up using the details you provided.</span></div>
+                    <div class="contact-success" role="{{ session('contact_mail_failed') ? 'alert' : 'status' }}"><strong>{{ session('contact_mail_failed') ? 'Message saved; notification delivery failed.' : 'Message received.' }}</strong><span>{{ session('contact_mail_failed') ? 'Your message is recorded, but our email notification could not be delivered. For urgent help, call '.$companySettings['phone'].'.' : 'Thanks for getting in touch. Our team will follow up using the details you provided.' }}</span></div>
                 @endif
                 @if ($errors->any())
                     <div class="contact-errors" role="alert"><strong>Please check your message.</strong><ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
