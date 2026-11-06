@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\ContactSubmissionController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LocationController as AdminLocationController;
 use App\Http\Controllers\Admin\PricingRuleController;
@@ -27,11 +28,11 @@ Route::get('/fleet', [FleetController::class, 'index'])->name('fleet.index');
 Route::get('/routes', [RoutesController::class, 'index'])->name('routes.index');
 Route::get('/booking', [BookingController::class, 'create'])->name('booking.create');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
-Route::get('/booking/complete', [BookingController::class, 'complete'])->middleware('auth')->name('booking.complete');
-Route::get('/booking/{booking}/confirmation', [BookingController::class, 'confirmation'])->middleware('auth')->name('booking.confirmation');
-Route::get('/my/bookings/{booking}', [BookingController::class, 'show'])->middleware('auth')->name('bookings.show');
-Route::post('/my/bookings/{booking}/cancellation', [BookingController::class, 'requestCancellation'])->middleware('auth')->name('bookings.cancellation.store');
-Route::post('/my/bookings/{booking}/review', [BookingController::class, 'storeReview'])->middleware('auth')->name('bookings.review.store');
+Route::get('/booking/complete', [BookingController::class, 'complete'])->middleware(['auth', 'active'])->name('booking.complete');
+Route::get('/booking/{booking}/confirmation', [BookingController::class, 'confirmation'])->middleware(['auth', 'active'])->name('booking.confirmation');
+Route::get('/my/bookings/{booking}', [BookingController::class, 'show'])->middleware(['auth', 'active'])->name('bookings.show');
+Route::post('/my/bookings/{booking}/cancellation', [BookingController::class, 'requestCancellation'])->middleware(['auth', 'active'])->name('bookings.cancellation.store');
+Route::post('/my/bookings/{booking}/review', [BookingController::class, 'storeReview'])->middleware(['auth', 'active'])->name('bookings.review.store');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
@@ -56,7 +57,7 @@ Route::get('/dashboard', function () {
     $firstName = explode(' ', trim($user->name))[0] ?? $user->name;
 
     return view('dashboard', compact('user', 'firstName', 'bookings', 'upcomingCount', 'completedTrips', 'totalTrips'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'active', 'verified'])->name('dashboard');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
@@ -74,10 +75,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/{customer}', [AdminCustomerController::class, 'show'])->name('customers.show');
+    Route::patch('/customers/{customer}/status', [AdminCustomerController::class, 'updateStatus'])->name('customers.status.update');
     Route::resource('vehicles', VehicleController::class);
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

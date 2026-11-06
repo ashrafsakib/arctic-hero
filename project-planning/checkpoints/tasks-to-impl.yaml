@@ -4,8 +4,8 @@ metadata:
   last_updated: "2026-11-07"
 
 summary:
-  total_tasks: 10
-  completed_tasks: 10
+  total_tasks: 16
+  completed_tasks: 16
   in_progress_tasks: 0
   pending_tasks: 0
   completion_percentage: 100.0
@@ -293,6 +293,166 @@ tasks:
       plan_item: "A-20"
       requirements: []
       full_trace: "A-20 -> task-breakdown.md -> admin map-pin persistence -> AdminOperationsTest"
+  - task_id: "A-22"
+    description: "Cross-workflow integration and regression tests"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "tests/Feature/CrossWorkflowIntegrationTest.php"
+          changes:
+            - change_type: "added"
+              description: "Exercise pricing, booking notifications, admin completion, customer review, and response display."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 81
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally (81 tests, 487 assertions). Changes are not merged and completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-22"
+      requirements: []
+      full_trace: "A-22 -> task-breakdown.md -> cross-workflow regression -> CrossWorkflowIntegrationTest"
+  - task_id: "A-23"
+    description: "Security, authorization, and validation review"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Http/Middleware/EnsureUserIsActive.php"
+          changes:
+            - change_type: "added"
+              description: "Log out and deny inactive accounts on authenticated routes."
+        - file: "routes/web.php"
+          changes:
+            - change_type: "modified"
+              description: "Enforce active-account checks on booking and account routes."
+        - file: "routes/auth.php"
+          changes:
+            - change_type: "modified"
+              description: "Enforce active-account checks on authenticated password and verification routes."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 81
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Security review found and fixed a medium account-access gap for disabled customers. Full suite passed locally (81 tests, 487 assertions); changes are not merged."
+    upstream_trace:
+      plan_item: "A-23"
+      requirements: []
+      full_trace: "A-23 -> task-breakdown.md -> security and active-account authorization review -> AdminCustomerManagementTest and AuthenticationTest"
+  - task_id: "A-24"
+    description: "Notification delivery tests and failure handling"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Services/Booking/BookingNotificationService.php"
+          changes:
+            - change_type: "modified"
+              description: "Use the notification dispatcher for testable customer and company delivery."
+        - file: "app/Http/Controllers/ContactController.php"
+          changes:
+            - change_type: "modified"
+              description: "Handle mail transport failure while retaining submission status."
+        - file: "tests/Feature/BookingNotificationFailureTest.php"
+          changes:
+            - change_type: "added"
+              description: "Verify customer and company transport failure paths."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 81
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Contact failure UI and booking notification warning are covered. Full suite passed locally (81 tests, 487 assertions); changes are not merged."
+    upstream_trace:
+      plan_item: "A-24"
+      requirements: []
+      full_trace: "A-24 -> task-breakdown.md -> mail failure persistence and messages -> BookingNotificationFailureTest and ContactPageTest"
+  - task_id: "A-25"
+    description: "Route-provider and fare edge-case tests"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "tests/Feature/RouteEstimatorEdgeCaseTest.php"
+          changes:
+            - change_type: "added"
+              description: "Cover unusable provider routes and connection failures."
+        - file: "tests/Unit/BookingFareCalculatorTest.php"
+          changes:
+            - change_type: "added"
+              description: "Cover fare rounding, zero trip components, and negative surcharge clamping."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 81
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally (81 tests, 487 assertions); changes are not merged."
+    upstream_trace:
+      plan_item: "A-25"
+      requirements: []
+      full_trace: "A-25 -> task-breakdown.md -> route and fare boundary cases -> RouteEstimatorEdgeCaseTest and BookingFareCalculatorTest"
+  - task_id: "A-26"
+    description: "Deployment, operations, and troubleshooting documentation"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "docs/operations.md"
+          changes:
+            - change_type: "added"
+              description: "Document production setup, release, access, mail/routing operations, and troubleshooting."
+        - file: "README.md"
+          changes:
+            - change_type: "modified"
+              description: "Refresh runtime scope and link the operations guide."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      notes: "Documentation reflects current implementation and deployment behavior; changes are not merged."
+    upstream_trace:
+      plan_item: "A-26"
+      requirements: []
+      full_trace: "A-26 -> task-breakdown.md -> deployment and operations guide -> docs/operations.md"
+  - task_id: "A-27"
+    description: "Admin customer lookup, details, and account-status backend"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Http/Controllers/Admin/CustomerController.php"
+          changes:
+            - change_type: "added"
+              description: "Search customer contacts, show booking history, and update customer-only account status."
+        - file: "resources/views/admin/customers/"
+          changes:
+            - change_type: "added"
+              description: "Add customer directory and detail screens."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 81
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "AdminCustomerManagementTest covers customer filtering, booking history, status changes, and admin role isolation. Full suite passed locally (81 tests, 487 assertions)."
+    upstream_trace:
+      plan_item: "A-27"
+      requirements: []
+      full_trace: "A-27 -> task-breakdown.md -> admin customer search/detail/status -> AdminCustomerManagementTest"
 
 pending_tasks: []
 untracked_changes: []
@@ -390,6 +550,61 @@ traceability_chain:
       - "app/Models/Location.php"
       - "app/Http/Controllers/Admin/LocationController.php"
       - "routes/web.php"
+    status: "complete"
+  - chain_id: "A-22"
+    requirement: "A-22"
+    plan_phase: "Cross-workflow quality"
+    plan_item: "A-22"
+    tasks: ["A-22"]
+    files:
+      - "tests/Feature/CrossWorkflowIntegrationTest.php"
+    status: "complete"
+  - chain_id: "A-23"
+    requirement: "A-23"
+    plan_phase: "Security and validation"
+    plan_item: "A-23"
+    tasks: ["A-23"]
+    files:
+      - "app/Http/Middleware/EnsureUserIsActive.php"
+      - "routes/web.php"
+      - "routes/auth.php"
+    status: "complete"
+  - chain_id: "A-24"
+    requirement: "A-24"
+    plan_phase: "Notification reliability"
+    plan_item: "A-24"
+    tasks: ["A-24"]
+    files:
+      - "app/Services/Booking/BookingNotificationService.php"
+      - "app/Http/Controllers/ContactController.php"
+      - "tests/Feature/BookingNotificationFailureTest.php"
+    status: "complete"
+  - chain_id: "A-25"
+    requirement: "A-25"
+    plan_phase: "Booking edge-case validation"
+    plan_item: "A-25"
+    tasks: ["A-25"]
+    files:
+      - "tests/Feature/RouteEstimatorEdgeCaseTest.php"
+      - "tests/Unit/BookingFareCalculatorTest.php"
+    status: "complete"
+  - chain_id: "A-26"
+    requirement: "A-26"
+    plan_phase: "Operations"
+    plan_item: "A-26"
+    tasks: ["A-26"]
+    files:
+      - "README.md"
+      - "docs/operations.md"
+    status: "complete"
+  - chain_id: "A-27"
+    requirement: "A-27"
+    plan_phase: "Admin customer management"
+    plan_item: "A-27"
+    tasks: ["A-27"]
+    files:
+      - "app/Http/Controllers/Admin/CustomerController.php"
+      - "resources/views/admin/customers/"
     status: "complete"
 validation:
   passed: true

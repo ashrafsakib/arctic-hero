@@ -196,6 +196,64 @@ additional_batches:
         result: "passed"
     warnings:
       - "Changes are locally verified but not committed or merged; completion credits remain unchanged."
+  - batch_id: "A22-A27"
+    completed_tasks: ["A-22", "A-23", "A-24", "A-25", "A-26", "A-27"]
+    blocked_tasks: []
+    required_endpoints: []
+    files_changed:
+      A-22:
+        - "tests/Feature/CrossWorkflowIntegrationTest.php"
+      A-23:
+        - "app/Http/Middleware/EnsureUserIsActive.php"
+        - "app/Http/Requests/Auth/LoginRequest.php"
+        - "routes/web.php"
+        - "routes/auth.php"
+      A-24:
+        - "app/Services/Booking/BookingNotificationService.php"
+        - "app/Http/Controllers/ContactController.php"
+        - "resources/views/contact/index.blade.php"
+        - "tests/Feature/BookingNotificationFailureTest.php"
+        - "tests/Feature/ContactPageTest.php"
+      A-25:
+        - "tests/Feature/RouteEstimatorEdgeCaseTest.php"
+        - "tests/Unit/BookingFareCalculatorTest.php"
+      A-26:
+        - "README.md"
+        - "docs/operations.md"
+      A-27:
+        - "app/Http/Controllers/Admin/CustomerController.php"
+        - "resources/views/admin/customers/"
+        - "routes/web.php"
+    evidence_mapping:
+      A-22: "CrossWorkflowIntegrationTest exercises booking, pricing, admin completion, customer review, and response display."
+      A-23: "Security review found one medium authorization gap: disabled customers retained booking-route sessions. Active middleware now protects booking and authenticated account routes; tests verify inactive login and access denial."
+      A-24: "BookingNotificationFailureTest and ContactPageTest cover transport failures, persisted submissions, and user-facing warnings."
+      A-25: "RouteEstimatorEdgeCaseTest covers unusable provider data and connection failure; BookingFareCalculatorTest covers rounding and nonpositive surcharges."
+      A-26: "Operations guide documents deployment, release/rollback, mail/routing monitoring, account access, and troubleshooting."
+      A-27: "AdminCustomerManagementTest verifies customer search, detail/history, status changes, role isolation, and access controls."
+    test_results:
+      command: "php artisan test"
+      passed: 81
+      failed: 0
+      skipped: 0
+      failures: []
+      assertions: 487
+      note: "Final full suite passed locally."
+    quality_checks:
+      - command: "php artisan test"
+        result: "passed; 81 tests, 487 assertions"
+      - command: "vendor\\bin\\pint --test <changed PHP files>"
+        result: "passed"
+      - command: "npm run build"
+        result: "passed"
+      - command: "php artisan route:list --path=admin --except-vendor"
+        result: "passed; 35 admin routes registered"
+      - command: "git diff --check"
+        result: "passed"
+      - command: "Parse batch-report.yaml and checkpoints/tasks-to-impl.yaml"
+        result: "passed"
+    warnings:
+      - "Changes are locally verified but not committed or merged; completion credits remain unchanged."
 test_results:
   batch:
     command: "php artisan test"

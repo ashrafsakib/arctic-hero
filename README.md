@@ -13,18 +13,18 @@ Arctic Hero is a Laravel 12 web application for a company-operated taxi booking 
 
 ## Current Scope
 
-Phase 1 and Phase 2 are implemented:
-
-- Laravel 12, PHP 8.3+, Blade, Tailwind CSS, Alpine.js, and Breeze authentication
+- Laravel 12, PHP 8.2+, Blade, Tailwind CSS, Alpine.js, and Breeze authentication
 - Customer and admin roles with active-status authorization
 - Database-backed vehicle types, vehicles, pricing rules, bookings, status history, reviews, locations, and notifications
 - Fare snapshots and payment placeholders on bookings
 - Realistic Oulu seed data
 - No driver portal, automatic assignment, live tracking, online payments, or AI features
+- Admin workbenches for bookings, vehicles, customers, pricing, locations/map pins, reviews, company settings, reports, and contact submissions
+- Customer cancellation requests, completed-trip reviews, and account status enforcement
 
 ## Requirements
 
-- PHP 8.3 or newer with `pdo_mysql` for MySQL
+- PHP 8.2 or newer with `pdo_mysql` for MySQL
 - Composer
 - Node.js and npm
 - MySQL 8 for normal development and production
@@ -58,7 +58,7 @@ php artisan storage:link
 php artisan serve
 ```
 
-The local demo admin is `admin@example.com` with password `ChangeMe123!`. Change this password immediately outside local development.
+The seeder creates a local demo admin (`admin@example.com` / `ChangeMe123!`). Only use this account locally; create a unique production administrator and change or remove demo credentials before exposing the application.
 
 ## Useful Commands
 
@@ -76,13 +76,13 @@ The checked-in local `.env` uses SQLite so the project can be started without a 
 - `app/Models`: Eloquent entities and relationships
 - `app/Http/Controllers`: thin HTTP controllers, with admin controllers under `Admin`
 - `app/Http/Requests`: request validation
-- `app/Services`: planned home for dedicated fare, routing, and booking workflows
-- `app/Policies`: resource authorization (next implementation phase)
+- `app/Services`: fare, route-estimation, notification, and company-settings workflows
+- `app/Http/Middleware`: admin and active-account access checks
 - `database/migrations`: schema and indexes
 - `database/seeders`: Oulu-oriented demo data
 - `resources/views`: Blade pages and Breeze layouts
 
-The booking flow creates pending requests and records status changes in `booking_status_histories`. The admin booking workbench supports the current lifecycle `pending -> contacted -> confirmed -> completed`, plus rejection and cancellation. A dedicated `BookingService` extraction and customer cancellation workflow remain planned.
+The booking flow creates pending requests and records status changes in `booking_status_histories`. Admins manage the booking lifecycle, customer access, active pricing rules, location pins, review responses, and company configuration. See the operations guide for production rollout and troubleshooting.
 
 ## Database Design
 
@@ -96,19 +96,17 @@ The booking flow creates pending requests and records status changes in `booking
 - `pricing_rules`: extensible extra-charge rules
 - `notifications`: Laravel database notifications
 
-## Remaining Work
-
-The multi-step booking flow, guest session preservation, server-side fare estimate, booking creation, admin status management, customer booking details, and Oulu routes page are implemented. Remaining work includes dedicated fare/routing services, configurable road routing and geocoding, customer cancellation and reviews, admin pricing/location/review/settings/report screens, and final accessibility/integration testing.
-
 See [project-planning/task-breakdown.md](project-planning/task-breakdown.md) for the Git-reconciled task breakdown and per-member 200-hour plan. The completion-hour allocation there is an estimate; use individual time logs for actual hours.
 
 ## Maps and Routing
 
-The public route explorer uses Leaflet and OpenStreetMap with active location records. Current route distances are approximate estimates based on map coordinates; configurable road-routing/geocoding providers behind `RouteService` remain future work.
+The public route explorer uses Leaflet and OpenStreetMap with active location records. Booking fare estimates use the optional OSRM-compatible route provider when configured; if it is unavailable or returns invalid data, the application records a warning and uses its local estimate.
 
 ## Production Notes
 
 - Set `APP_ENV=production`, `APP_DEBUG=false`, a strong `APP_KEY`, and secure session/cookie settings.
-- Use MySQL 8, a queue worker, scheduled tasks, and a real mail transport.
+- Use MySQL 8 and configure a real mail transport. Booking and contact mail are sent synchronously; configure a queue worker if queued work is added.
 - Validate and store uploaded images through Laravel’s public/private filesystem configuration.
 - Run `php artisan optimize` during deployment and never use demo credentials in production.
+
+See [docs/operations.md](docs/operations.md) for environment setup, release steps, backups, account management, mail monitoring, and common troubleshooting.

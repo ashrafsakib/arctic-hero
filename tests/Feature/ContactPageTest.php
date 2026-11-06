@@ -6,6 +6,8 @@ use App\Mail\ContactMessage;
 use App\Models\ContactSubmission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Mockery;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Tests\TestCase;
 
 class ContactPageTest extends TestCase
@@ -72,5 +74,34 @@ class ContactPageTest extends TestCase
 
         Mail::assertNothingSent();
         $this->assertDatabaseCount('contact_submissions', 0);
+    }
+
+    public function test_contact_submission_is_saved_and_failure_is_shown_when_mail_delivery_fails(): void
+    {
+        $pendingMail = Mockery::mock();
+        $pendingMail->shouldReceive('send')->once()->andThrow(new TransportException('SMTP is unavailable.'));
+        Mail::shouldReceive('to')->once()->with(config('company.email'))->andReturn($pendingMail);
+
+        $this->post(route('contact.send'), [
+            'name' => 'Aino Korhonen',
+            'email' => 'aino@example.com',
+            'phone' => '',
+            'topic' => 'booking',
+            'message' => 'I have a question about my airport pickup.',
+            'website' => '',
+        ])->assertRedirect(route('contact.index'))
+            ->assertSessionHas('contact_sent', true)
+            ->assertSessionHas('contact_mail_failed', true);
+
+        $this->assertDatabaseHas('contact_submissions', [
+            'email' => 'aino@example.com',
+            'status' => 'new',
+            'email_status' => 'failed',
+        ]);
+
+        $this->get(route('contact.index'))
+            ->assertOk()
+            ->assertSeeText('Message saved; notification delivery failed.')
+            ->assertSeeText(config('company.phone'));
     }
 }
