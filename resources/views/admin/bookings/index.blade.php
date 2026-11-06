@@ -26,9 +26,10 @@
                     @if (request()->hasAny(['search', 'status', 'date_from', 'date_to']))<a class="min-h-10 px-2 py-2 text-sm text-slate-700 underline underline-offset-4" href="{{ route('admin.bookings.index') }}">Clear</a>@endif
                 </form>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Bookings table">
                     <table class="w-full min-w-[900px] border-collapse text-left text-sm">
-                        <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-600"><tr><th class="px-4 py-3 font-semibold">Booking</th><th class="px-4 py-3 font-semibold">Customer</th><th class="px-4 py-3 font-semibold">Pickup</th><th class="px-4 py-3 font-semibold">Route</th><th class="px-4 py-3 font-semibold">Vehicle</th><th class="px-4 py-3 font-semibold">Fare</th><th class="px-4 py-3 font-semibold">Status</th><th class="px-4 py-3 text-right font-semibold">Action</th></tr></thead>
+                        <caption class="sr-only">Bookings matching the selected filters</caption>
+                        <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-600"><tr><th class="px-4 py-3 font-semibold" scope="col">Booking</th><th class="px-4 py-3 font-semibold" scope="col">Customer</th><th class="px-4 py-3 font-semibold" scope="col">Pickup</th><th class="px-4 py-3 font-semibold" scope="col">Route</th><th class="px-4 py-3 font-semibold" scope="col">Vehicle</th><th class="px-4 py-3 font-semibold" scope="col">Fare</th><th class="px-4 py-3 font-semibold" scope="col">Status</th><th class="px-4 py-3 text-right font-semibold" scope="col">Action</th></tr></thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse ($bookings as $booking)
                                 <tr class="hover:bg-slate-50">

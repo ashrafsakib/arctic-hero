@@ -35,9 +35,10 @@
                     @if (request()->hasAny(['search', 'status', 'vehicle_type_id', 'brand']))<a class="min-h-10 px-2 py-2 text-sm text-slate-700 underline underline-offset-4" href="{{ route('admin.vehicles.index') }}">Clear</a>@endif
                 </form>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Fleet table">
                     <table class="w-full min-w-[760px] border-collapse text-left text-sm">
-                        <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-600"><tr><th class="px-4 py-3 font-semibold">Vehicle</th><th class="px-4 py-3 font-semibold">Type</th><th class="px-4 py-3 font-semibold">Registration</th><th class="px-4 py-3 font-semibold">Capacity</th><th class="px-4 py-3 font-semibold">Status</th><th class="px-4 py-3 text-right font-semibold">Actions</th></tr></thead>
+                        <caption class="sr-only">Vehicles matching the selected filters</caption>
+                        <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-600"><tr><th class="px-4 py-3 font-semibold" scope="col">Vehicle</th><th class="px-4 py-3 font-semibold" scope="col">Type</th><th class="px-4 py-3 font-semibold" scope="col">Registration</th><th class="px-4 py-3 font-semibold" scope="col">Capacity</th><th class="px-4 py-3 font-semibold" scope="col">Status</th><th class="px-4 py-3 text-right font-semibold" scope="col">Actions</th></tr></thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse ($vehicles as $vehicle)
                                 <tr class="hover:bg-slate-50">

@@ -102,6 +102,9 @@
 .booking-customer-help span { color: #72726a; font-size: 10px; }
 .booking-customer-help a { width: fit-content; color: #171714; font-size: 12px; font-weight: 600; text-decoration: underline; text-decoration-color: #b9aa00; text-underline-offset: 3px; overflow-wrap: anywhere; }
 .customer-app :focus-visible { outline: 2px solid #8c8100; outline-offset: 3px; }
+.admin-sidebar :focus-visible { outline-color: #f5df00; }
+.admin-skip-link { position: absolute; z-index: 100; top: 8px; left: 8px; padding: 10px 14px; transform: translateY(-160%); background: #fff; color: #11110f; font-size: 14px; font-weight: 700; }
+.admin-skip-link:focus { transform: translateY(0); }
 
 .admin-shell { display: grid; min-height: 100vh; grid-template-columns: 245px minmax(0, 1fr); background: #f1f1ef; }
 .admin-sidebar { position: sticky; top: 0; display: flex; height: 100vh; flex-direction: column; padding: 25px 17px 16px; background: #11110f; color: white; }
@@ -134,7 +137,7 @@
     .admin-sidebar { position: relative; height: auto; min-height: 0; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 25px; padding: 13px 4%; }
     .admin-sidebar-label { display: none; }
     .admin-sidebar-nav { display: flex; flex: 1 1 auto; flex-wrap: wrap; gap: 5px; }
-    .admin-sidebar-nav a { min-height: 38px; }
+    .admin-sidebar-nav a { min-height: 44px; }
     .admin-sidebar-footer { display: flex; align-items: center; gap: 13px; margin: 0; padding: 0; border: 0; }
     .admin-sidebar-user { display: none; }
     .admin-sidebar-public { display: none; }
@@ -143,10 +146,12 @@
 
 @media (max-width: 560px) {
     .admin-sidebar { gap: 10px; }
-    .admin-sidebar-brand { width: calc(100% - 45px); }
+    .admin-sidebar-brand { width: 100%; }
     .admin-sidebar-nav { flex: 1 1 100%; }
-    .admin-sidebar-nav a { flex: 1 1 auto; font-size: 11px; }
-    .admin-sidebar-footer { position: absolute; top: 12px; right: 4%; }
+    .admin-sidebar-nav a { flex: 1 1 130px; font-size: 12px; }
+    .admin-sidebar-footer { position: static; flex: 1 1 100%; justify-content: flex-end; }
+    .admin-sidebar-footer form { flex: 1 1 auto; }
+    .admin-sidebar-footer form button { min-height: 44px; text-align: center; }
 }
 
 @media (max-width: 900px) {
@@ -156,6 +161,16 @@
     .dashboard-content { grid-template-columns: minmax(0, 1.3fr) minmax(240px, .8fr); }
     .dashboard-welcome h1 { font-size: 39px; }
     .booking-customer-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto !important; }
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
 }
 
 @media (max-width: 640px) {

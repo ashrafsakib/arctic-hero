@@ -4,9 +4,10 @@
         <div><p class="text-xs font-bold uppercase tracking-widest text-yellow-700">Fare configuration</p><h1 class="mt-2 text-3xl font-semibold text-slate-900">Pricing rules</h1><p class="mt-2 text-sm text-slate-600">Active rules add a fixed surcharge when a ride's scheduled pickup falls inside the rule window.</p></div>
         @if (session('success'))<p class="border-l-4 border-emerald-700 bg-emerald-50 px-4 py-3 text-sm text-emerald-950" role="status">{{ session('success') }}</p>@endif
         @if ($errors->any())<p class="border-l-4 border-red-700 bg-red-50 px-4 py-3 text-sm text-red-950" role="alert">{{ $errors->first() }}</p>@endif
-        <div class="overflow-x-auto border border-slate-200 bg-white">
+        <div class="overflow-x-auto border border-slate-200 bg-white" tabindex="0" role="region" aria-label="Pricing rules table">
             <table class="w-full min-w-[760px] border-collapse text-left text-sm">
-                <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-600"><tr><th class="px-4 py-3">Rule</th><th class="px-4 py-3">Surcharge</th><th class="px-4 py-3">Effective window</th><th class="px-4 py-3">Status</th><th class="px-4 py-3 text-right">Actions</th></tr></thead>
+                <caption class="sr-only">Configured pricing rules</caption>
+                <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-600"><tr><th class="px-4 py-3" scope="col">Rule</th><th class="px-4 py-3" scope="col">Surcharge</th><th class="px-4 py-3" scope="col">Effective window</th><th class="px-4 py-3" scope="col">Status</th><th class="px-4 py-3 text-right" scope="col">Actions</th></tr></thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse ($pricingRules as $pricingRule)
                         <tr>

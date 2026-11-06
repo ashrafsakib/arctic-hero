@@ -109,11 +109,17 @@ class AdminOperationsTest extends TestCase
         $this->get(route('admin.locations.index'))
             ->assertOk()
             ->assertSeeText('Location map pins')
-            ->assertSeeText('Add location');
+            ->assertSeeText('Add location')
+            ->assertSee('role="region" aria-label="Location map pins table"', false)
+            ->assertSee('<caption class="sr-only">Saved locations and their map pin details</caption>', false);
 
         $this->get(route('admin.locations.create'))
             ->assertOk()
-            ->assertSee('id="location-pin-map"', false);
+            ->assertSee('id="location-pin-map"', false)
+            ->assertSee('role="region" aria-label="Map preview for the location pin"', false)
+            ->assertSee('id="location-set-pin"', false)
+            ->assertSee('aria-live="polite"', false)
+            ->assertSeeText('coordinates can still be entered manually');
 
         $this->post(route('admin.locations.store'), [
             'name' => 'Oulu Station',
@@ -175,6 +181,19 @@ class AdminOperationsTest extends TestCase
                 'status' => 'active',
             ])
             ->assertSessionHasErrors('longitude');
+    }
+
+    public function test_admin_layout_exposes_skip_link_and_current_navigation_page(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin', 'status' => 'active']);
+
+        $this->actingAs($admin)
+            ->get(route('admin.locations.index'))
+            ->assertOk()
+            ->assertSee('href="#main-content">Skip to main content</a>', false)
+            ->assertSee('<main id="main-content" tabindex="-1">', false)
+            ->assertSee('aria-current="page"', false)
+            ->assertSee('aria-labelledby="admin-workspace-label"', false);
     }
 
     public function test_admin_can_moderate_a_review_and_publish_a_response_to_its_customer(): void

@@ -29,12 +29,24 @@ class CustomerBookingActionsTest extends TestCase
             ->assertSessionHas('success');
 
         $this->assertSame(Booking::CANCELLATION_REQUESTED, $booking->fresh()->status);
+        $this->actingAs($customer)
+            ->get(route('bookings.show', $booking))
+            ->assertOk()
+            ->assertSeeText('Your cancellation request is waiting for review.')
+            ->assertDontSeeText('Send cancellation request');
+
+        $this->actingAs($customer)
+            ->from(route('bookings.show', $booking))
+            ->post(route('bookings.cancellation.store', $booking))
+            ->assertSessionHasErrors('cancellation');
+
         $this->assertDatabaseHas('booking_status_histories', [
             'booking_id' => $booking->id,
             'status' => Booking::CANCELLATION_REQUESTED,
             'changed_by' => $customer->id,
             'notes' => 'Plans changed',
         ]);
+        $this->assertDatabaseCount('booking_status_histories', 2);
 
         $this->actingAs($admin)
             ->get(route('admin.bookings.show', $booking))

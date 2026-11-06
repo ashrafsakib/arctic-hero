@@ -16,6 +16,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="customer-app min-h-screen">
+            <a class="admin-skip-link" href="#main-content">Skip to main content</a>
             @if (Auth::check() && Auth::user()->isAdmin())
                 <div class="admin-shell">
                     @include('layouts.admin-sidebar')
@@ -25,7 +26,7 @@
                                 <div>{{ $header }}</div>
                             </header>
                         @endisset
-                        <main>{{ $slot }}</main>
+                        <main id="main-content" tabindex="-1">{{ $slot }}</main>
                     </div>
                 </div>
             @else
@@ -37,7 +38,7 @@
                         </div>
                     </header>
                 @endisset
-                <main>{{ $slot }}</main>
+                <main id="main-content" tabindex="-1">{{ $slot }}</main>
             @endif
         </div>
     </body>

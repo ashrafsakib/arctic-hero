@@ -31,9 +31,10 @@
                     @if (request()->hasAny(['search', 'topic', 'status']))<a class="min-h-10 px-2 py-2 text-sm text-slate-700 underline underline-offset-4" href="{{ route('admin.contact-submissions.index') }}">Clear</a>@endif
                 </form>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Contact submissions table">
                     <table class="w-full min-w-[720px] border-collapse text-left text-sm">
-                        <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-600"><tr><th class="px-4 py-3 font-semibold">Sender</th><th class="px-4 py-3 font-semibold">Topic</th><th class="px-4 py-3 font-semibold">Message</th><th class="px-4 py-3 font-semibold">Received</th><th class="px-4 py-3 font-semibold">Status</th><th class="px-4 py-3 text-right font-semibold">Action</th></tr></thead>
+                        <caption class="sr-only">Contact submissions matching the selected filters</caption>
+                        <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-600"><tr><th class="px-4 py-3 font-semibold" scope="col">Sender</th><th class="px-4 py-3 font-semibold" scope="col">Topic</th><th class="px-4 py-3 font-semibold" scope="col">Message</th><th class="px-4 py-3 font-semibold" scope="col">Received</th><th class="px-4 py-3 font-semibold" scope="col">Status</th><th class="px-4 py-3 text-right font-semibold" scope="col">Action</th></tr></thead>
                         <tbody class="divide-y divide-slate-100">
                             @forelse ($submissions as $submission)
                                 <tr class="{{ $submission->status === 'new' ? 'bg-yellow-50/50' : 'hover:bg-slate-50' }}">
