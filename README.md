@@ -69,6 +69,17 @@ npm run dev
 php artisan route:list
 ```
 
+### Browser End-to-End Tests
+
+Install the supported Playwright browsers once, then run the browser suite:
+
+```bash
+npx playwright install chromium firefox webkit
+npm test
+```
+
+The browser suite uses a temporary SQLite database and session directory. It does not modify the configured application database. Responsive checks run at mobile, tablet, and desktop sizes in Chromium, Firefox, and WebKit; customer cancellation and review workflows run in all three engines.
+
 The checked-in local `.env` uses SQLite so the project can be started without a MySQL server. Use MySQL through `.env` for the intended deployment configuration.
 
 ## Architecture
@@ -109,4 +120,4 @@ The public route explorer uses Leaflet and OpenStreetMap with active location re
 - Validate and store uploaded images through Laravel’s public/private filesystem configuration.
 - Run `php artisan optimize` during deployment and never use demo credentials in production.
 
-See [docs/operations.md](docs/operations.md) for environment setup, release steps, backups, account management, mail monitoring, and common troubleshooting.
+See [docs/customer-guide.md](docs/customer-guide.md) for customer instructions and a local demo walkthrough. See [docs/operations.md](docs/operations.md) for environment setup, release steps, backups, account management, mail monitoring, and common troubleshooting.

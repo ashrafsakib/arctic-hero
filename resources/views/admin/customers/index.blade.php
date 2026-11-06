@@ -7,11 +7,15 @@
             <article class="border border-slate-200 bg-white p-5"><p class="text-sm text-slate-600">Active</p><p class="mt-2 text-3xl font-semibold text-slate-900">{{ $activeCount }}</p></article>
             <article class="border border-slate-200 bg-white p-5"><p class="text-sm text-slate-600">Inactive</p><p class="mt-2 text-3xl font-semibold text-slate-900">{{ $inactiveCount }}</p></article>
         </div>
-        <form class="flex flex-wrap items-end gap-3 border border-slate-200 bg-white p-4" method="get" action="{{ route('admin.customers.index') }}">
-            <label class="text-sm font-medium text-slate-700">Search name, email, or phone<input class="mt-1 block min-h-10 border-slate-300" name="search" value="{{ request('search') }}" maxlength="100"></label>
+        <form class="flex flex-wrap items-end gap-3 border border-slate-200 bg-white p-4" method="get" action="{{ route('admin.customers.index') }}" aria-label="Filter customer accounts">
+            <label class="text-sm font-medium text-slate-700">Search name, email, or phone<input class="mt-1 block min-h-10 border-slate-300" type="search" name="search" value="{{ request('search') }}" maxlength="100"></label>
             <label class="text-sm font-medium text-slate-700">Account status<select class="mt-1 block min-h-10 border-slate-300" name="status"><option value="">All customers</option><option value="active" @selected(request('status') === 'active')>Active</option><option value="inactive" @selected(request('status') === 'inactive')>Inactive</option></select></label>
             <button class="min-h-10 bg-slate-900 px-4 text-sm font-semibold text-white" type="submit">Search</button>
+            @if (request()->filled('search') || request()->filled('status'))
+                <a class="min-h-10 px-2 py-2 text-sm font-semibold underline underline-offset-4" href="{{ route('admin.customers.index') }}">Clear filters</a>
+            @endif
         </form>
+        <p class="text-sm text-slate-600" role="status">Showing {{ $customers->firstItem() ?? 0 }}–{{ $customers->lastItem() ?? 0 }} of {{ $customers->total() }} matching customers</p>
         <section class="overflow-x-auto border border-slate-200 bg-white" tabindex="0" role="region" aria-label="Customer accounts table">
             <table class="w-full min-w-[700px] border-collapse text-left text-sm">
                 <caption class="sr-only">Customer accounts matching the selected filters</caption>

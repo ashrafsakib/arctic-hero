@@ -71,6 +71,43 @@ class AdminCustomerManagementTest extends TestCase
         $this->assertSame('active', $admin->fresh()->status);
     }
 
+    public function test_customer_directory_searches_by_name_and_phone_and_clears_filters(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin', 'status' => 'active']);
+        $customer = User::factory()->create([
+            'name' => 'Aino Korhonen',
+            'email' => 'aino@example.com',
+            'phone' => '+358401234567',
+        ]);
+        User::factory()->create(['name' => 'Other Customer', 'email' => 'other@example.com']);
+
+        $this->actingAs($admin)
+            ->get(route('admin.customers.index', ['search' => '+358401234567', 'status' => 'active']))
+            ->assertOk()
+            ->assertSeeText('Aino Korhonen')
+            ->assertSeeText('Showing 1–1 of 1 matching customers')
+            ->assertSeeText('Clear filters')
+            ->assertDontSeeText('Other Customer');
+
+        $this->get(route('admin.customers.index'))
+            ->assertOk()
+            ->assertSeeText('Showing 1–2 of 2 matching customers');
+    }
+
+    public function test_invalid_customer_status_is_rejected_without_changing_the_account(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin', 'status' => 'active']);
+        $customer = User::factory()->create(['status' => 'active']);
+
+        $this->actingAs($admin)
+            ->from(route('admin.customers.show', $customer))
+            ->patch(route('admin.customers.status.update', $customer), ['status' => 'suspended'])
+            ->assertRedirect(route('admin.customers.show', $customer))
+            ->assertSessionHasErrors('status');
+
+        $this->assertSame('active', $customer->fresh()->status);
+    }
+
     public function test_only_active_admins_can_access_customer_management(): void
     {
         $this->get(route('admin.customers.index'))->assertRedirect(route('login'));
