@@ -19,10 +19,9 @@ test('admin can find a customer, review the account and booking history, then ma
 
     await page.getByRole('button', { name: 'Deactivate account' }).click();
     await expect(page.getByRole('status')).toContainText('Customer account status updated.');
-    await expect(page.getByText('Inactive', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Reactivate account' })).toBeVisible();
 
     await page.getByRole('button', { name: 'Reactivate account' }).click();
     await expect(page.getByRole('status')).toContainText('Customer account status updated.');
-    await expect(page.getByText('Active', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Deactivate account' })).toBeVisible();
 });

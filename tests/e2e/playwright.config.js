@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 
 const viewportTests = '**/responsive.spec.js';
+const visualTests = '**/visual-regression.spec.js';
 const journeyTests = ['**/cancellation-flow.spec.js', '**/customer-management.spec.js', '**/review-flow.spec.js'];
 const runId = randomUUID();
 process.env.ARCTIC_HERO_E2E_RUN_ID = runId;
@@ -13,7 +14,7 @@ const browsers = [
 
 export default defineConfig({
     testDir: '.',
-    testMatch: [viewportTests, ...journeyTests],
+    testMatch: [viewportTests, visualTests, ...journeyTests],
     globalTeardown: './cleanup.cjs',
     fullyParallel: false,
     workers: 1,
@@ -26,7 +27,7 @@ export default defineConfig({
     },
     projects: browsers.map(({ name, device }) => ({
         name,
-        testMatch: [viewportTests, ...journeyTests],
+        testMatch: [viewportTests, visualTests, ...journeyTests],
         use: { ...devices[device] },
     })),
     webServer: {

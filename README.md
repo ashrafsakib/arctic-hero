@@ -78,7 +78,7 @@ npx playwright install chromium firefox webkit
 npm test
 ```
 
-The browser suite uses a temporary SQLite database and session directory. It does not modify the configured application database. Responsive checks run at mobile, tablet, and desktop sizes in Chromium, Firefox, and WebKit; customer cancellation and review workflows run in all three engines.
+The browser suite uses a temporary SQLite database and session directory. It does not modify the configured application database. Responsive checks, cancellation/review workflows, and customer account management run in Chromium, Firefox, and WebKit; Chromium screenshot baselines cover customer admin list and detail screens on mobile and desktop.
 
 The checked-in local `.env` uses SQLite so the project can be started without a MySQL server. Use MySQL through `.env` for the intended deployment configuration.
 
