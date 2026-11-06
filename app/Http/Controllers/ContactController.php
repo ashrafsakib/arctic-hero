@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use Throwable;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class ContactController extends Controller
 {
@@ -41,7 +41,7 @@ class ContactController extends Controller
                 'email_status' => 'sent',
                 'email_sent_at' => now(),
             ]);
-        } catch (Throwable $exception) {
+        } catch (TransportExceptionInterface $exception) {
             report($exception);
             $submission->update(['email_status' => 'failed']);
         }

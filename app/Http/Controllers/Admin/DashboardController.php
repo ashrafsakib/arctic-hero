@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\User;
 use App\Models\ContactSubmission;
 use App\Models\Location;
 use App\Models\PricingRule;
@@ -24,6 +25,7 @@ class DashboardController extends Controller
             'visibleReviewCount' => Review::where('status', 'visible')->count(),
             'locationCount' => Location::count(),
             'activePricingRuleCount' => PricingRule::where('status', 'active')->count(),
+            'customerCount' => User::where('role', 'customer')->count(),
         ]);
     }
 }
