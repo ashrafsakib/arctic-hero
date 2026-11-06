@@ -264,3 +264,7 @@ test_results:
 quality_checks:
   - command: "vendor\\bin\\pint --test <changed PHP files>"
     result: "passed"
+# // test coverage is not measured; all tests pass locally
+#   - command: "npm run build"
+#     result: "passed"
+#   - command: "php artisan route:list --path=admin --except-vendor"
