@@ -13,7 +13,7 @@
                 <section class="booking-customer-panel">
                     <div class="dashboard-section-heading"><div><p class="dashboard-eyebrow">Your journey</p><h2>Route</h2></div></div>
                     <div class="booking-customer-route"><div><span>Pickup</span><strong>{{ $booking->pickup_address }}</strong></div><div><span>Destination</span><strong>{{ $booking->destination_address }}</strong></div></div>
-                    <dl class="booking-customer-facts"><div><dt>Vehicle</dt><dd>{{ $booking->vehicleType->name }}</dd></div><div><dt>Passengers</dt><dd>{{ $booking->passengers }}</dd></div><div><dt>Luggage</dt><dd>{{ $booking->luggage_count }} bags</dd></div><div><dt>Estimate</dt><dd>€{{ number_format((float) $booking->total_fare, 2) }}</dd></div></dl>
+                    <dl class="booking-customer-facts"><div><dt>Vehicle</dt><dd>{{ $booking->vehicleType->name }}</dd></div><div><dt>Passengers</dt><dd>{{ $booking->passengers }}</dd></div><div><dt>Luggage</dt><dd>{{ $booking->luggage_count }} bags</dd></div><div><dt>Pricing surcharge</dt><dd>€{{ number_format((float) $booking->extra_charge, 2) }}</dd></div><div><dt>Estimate</dt><dd>€{{ number_format((float) $booking->total_fare, 2) }}</dd></div></dl>
                     @if ($booking->customer_notes)<div class="booking-customer-note"><span>Your note</span><p>{{ $booking->customer_notes }}</p></div>@endif
                 </section>
 
@@ -64,6 +64,7 @@
                     <div class="dashboard-section-heading"><div><p class="dashboard-eyebrow">Thanks for your feedback</p><h2 id="review-heading">Your review</h2></div></div>
                     <p>{{ $booking->review->rating }} / 5 stars</p>
                     @if ($booking->review->comment)<p>{{ $booking->review->comment }}</p>@endif
+                    @if ($booking->review->admin_response)<div class="booking-customer-note"><span>Response from {{ $companySettings['name'] }}</span><p>{{ $booking->review->admin_response }}</p></div>@endif
                 </section>
             @endif
         </div>

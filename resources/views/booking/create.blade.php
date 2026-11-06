@@ -51,7 +51,7 @@
                         <label class="booking-input"><span><i class="destination-dot"></i>Destination</span><input name="destination_address" list="known-locations" value="{{ old('destination_address', $destination) }}" placeholder="Where are you going?" autocomplete="off"><button type="button" data-select-destination aria-label="Set destination point on map" aria-pressed="false">Set on map</button></label>
                         <datalist id="known-locations">@foreach ($locations as $location)<option value="{{ $location->address }}">{{ $location->name }}</option>@endforeach</datalist>
                         <div class="booking-date-grid">
-                            <label class="booking-input"><span>Pickup date</span><input type="date" name="booking_date" min="{{ today()->toDateString() }}" value="{{ old('booking_date', $bookingDate) }}" required></label>
+                            <label class="booking-input"><span>Pickup date</span><input type="date" name="booking_date" min="{{ today()->toDateString() }}" max="{{ $bookingMaxDate }}" value="{{ old('booking_date', $bookingDate) }}" required></label>
                             <label class="booking-input"><span>Pickup time</span><input type="time" name="booking_time" value="{{ old('booking_time', $bookingTime) }}" required></label>
                         </div>
                         <div class="booking-date-grid">
@@ -81,7 +81,7 @@
                     </div>
                     <aside class="booking-fare-panel" aria-live="polite">
                         <p>FARE ESTIMATE</p><h3 data-fare-total>€0.00</h3><span class="booking-fare-route" data-fare-route>Set pickup and destination on the map</span>
-                        <dl><div><dt>Base fare</dt><dd data-fare-base>—</dd></div><div><dt>Distance</dt><dd data-fare-distance>—</dd></div><div><dt>Journey time</dt><dd data-fare-time>—</dd></div></dl>
+                        <dl><div><dt>Base fare</dt><dd data-fare-base>—</dd></div><div><dt>Distance</dt><dd data-fare-distance>—</dd></div><div><dt>Journey time</dt><dd data-fare-time>—</dd></div><div><dt>Active surcharges</dt><dd data-fare-extra>—</dd></div></dl>
                         <small>Estimate uses the selected route and vehicle rates. Final fare may vary.</small>
                     </aside>
                 </div>
@@ -100,7 +100,7 @@
                         <div><span>Group</span><strong data-review-passengers></strong></div>
                         <div><span>Vehicle</span><strong data-review-vehicle></strong></div>
                     </div>
-                    <aside class="booking-fare-panel booking-review-fare"><p>ESTIMATED TOTAL</p><h3 data-fare-total>€0.00</h3><dl><div><dt>Base fare</dt><dd data-fare-base>—</dd></div><div><dt>Distance</dt><dd data-fare-distance>—</dd></div><div><dt>Journey time</dt><dd data-fare-time>—</dd></div></dl><small>No payment is taken now. Your booking is sent as a ride request.</small></aside>
+                    <aside class="booking-fare-panel booking-review-fare"><p>ESTIMATED TOTAL</p><h3 data-fare-total>€0.00</h3><dl><div><dt>Base fare</dt><dd data-fare-base>—</dd></div><div><dt>Distance</dt><dd data-fare-distance>—</dd></div><div><dt>Journey time</dt><dd data-fare-time>—</dd></div><div><dt>Active surcharges</dt><dd data-fare-extra>—</dd></div></dl><small>No payment is taken now. Your booking is sent as a ride request.</small></aside>
                 </div>
                 <label class="booking-confirm-check"><input type="checkbox" required><span>I have checked the trip details and want to send this booking request.</span></label>
                 <p class="booking-step-error" data-step-error role="alert"></p>
@@ -113,5 +113,6 @@
     <footer class="booking-footer"><a href="mailto:{{ config('company.email') }}">Need help? {{ config('company.email') }}</a><span>ARCTIC HERO · OULU</span></footer>
     <script type="application/json" data-vehicle-types>@json($vehicleData)</script>
     <script type="application/json" data-locations>@json($locationData)</script>
+    <script type="application/json" data-pricing-rules>@json($pricingRules)</script>
 </body>
 </html>

@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Mail\ContactMessage;
 use App\Models\ContactSubmission;
+use App\Services\CompanySettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Throwable;
 use Illuminate\View\View;
+use Throwable;
 
 class ContactController extends Controller
 {
@@ -17,7 +18,7 @@ class ContactController extends Controller
         return view('contact.index');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, CompanySettings $settings): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
@@ -35,7 +36,7 @@ class ContactController extends Controller
         ]);
 
         try {
-            Mail::to(config('company.email'))->send(new ContactMessage($data));
+            Mail::to($settings->all()['email'])->send(new ContactMessage($data));
             $submission->update([
                 'email_status' => 'sent',
                 'email_sent_at' => now(),

@@ -4,8 +4,8 @@ metadata:
   last_updated: "2026-11-07"
 
 summary:
-  total_tasks: 4
-  completed_tasks: 4
+  total_tasks: 10
+  completed_tasks: 10
   in_progress_tasks: 0
   pending_tasks: 0
   completion_percentage: 100.0
@@ -127,6 +127,172 @@ tasks:
       plan_item: "A-10"
       requirements: []
       full_trace: "A-10 -> task-breakdown.md -> profile and registration validation -> RegistrationTest and ProfileTest"
+  - task_id: "A-14"
+    description: "Admin pricing-rule management and fare integration"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Http/Controllers/Admin/PricingRuleController.php"
+          changes:
+            - change_type: "added"
+              description: "Add validated admin CRUD for scheduled pricing rules."
+        - file: "app/Services/Booking/PricingRuleService.php"
+          changes:
+            - change_type: "added"
+              description: "Select scheduled active surcharges for fare calculation and estimates."
+        - file: "app/Services/Booking/FareCalculator.php"
+          changes:
+            - change_type: "modified"
+              description: "Include scheduled pricing surcharges in persisted fare totals."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 69
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-14"
+      requirements: []
+      full_trace: "A-14 -> task-breakdown.md -> pricing-rule administration and fare calculation -> AdminOperationsTest"
+  - task_id: "A-15"
+    description: "Admin locations and coordinate-validated map pins"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Http/Controllers/Admin/LocationController.php"
+          changes:
+            - change_type: "added"
+              description: "Implement admin location CRUD and coordinate-pair validation."
+        - file: "resources/views/admin/locations/"
+          changes:
+            - change_type: "added"
+              description: "Provide admin map-pin management forms and Leaflet pin selection."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 69
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-15"
+      requirements: []
+      full_trace: "A-15 -> task-breakdown.md -> location CRUD and pin validation -> AdminOperationsTest"
+  - task_id: "A-16"
+    description: "Review moderation and administrator responses"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Http/Controllers/Admin/ReviewController.php"
+          changes:
+            - change_type: "added"
+              description: "Add admin-only review visibility and response management."
+        - file: "database/migrations/2026_11_07_000001_add_admin_response_to_reviews_table.php"
+          changes:
+            - change_type: "added"
+              description: "Persist response text and response timestamp."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 69
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-16"
+      requirements: []
+      full_trace: "A-16 -> task-breakdown.md -> review moderation and customer responses -> AdminOperationsTest"
+  - task_id: "A-17"
+    description: "Company/service settings and configuration validation"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Services/CompanySettings.php"
+          changes:
+            - change_type: "added"
+              description: "Load validated persisted settings with configuration defaults."
+        - file: "app/Http/Controllers/Admin/SettingsController.php"
+          changes:
+            - change_type: "added"
+              description: "Validate and persist company contact and booking policy settings."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 69
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-17"
+      requirements: []
+      full_trace: "A-17 -> task-breakdown.md -> persisted settings and validation -> AdminOperationsTest"
+  - task_id: "A-18"
+    description: "Admin booking reports and analytics"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Http/Controllers/Admin/ReportController.php"
+          changes:
+            - change_type: "added"
+              description: "Query booking volume, status mix, pickup counts, and completed fare revenue."
+        - file: "resources/views/admin/reports/"
+          changes:
+            - change_type: "added"
+              description: "Display filterable booking operations analytics."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 69
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-18"
+      requirements: []
+      full_trace: "A-18 -> task-breakdown.md -> report queries and admin screen -> AdminOperationsTest"
+  - task_id: "A-20"
+    description: "Backend support for admin-managed map pins"
+    status: "completed"
+    implementation:
+      files_changed:
+        - file: "app/Models/Location.php"
+          changes:
+            - change_type: "modified"
+              description: "Support persisted map coordinates and location management."
+        - file: "routes/web.php"
+          changes:
+            - change_type: "modified"
+              description: "Register admin-only location management routes."
+      commit_hash: ""
+      pr_link: ""
+    verification:
+      test_results:
+        command: "php artisan test"
+        passed: 69
+        failed: 0
+        skipped: 0
+        failures: []
+      notes: "Full suite passed locally. Changes are not merged; completion credit remains unassigned."
+    upstream_trace:
+      plan_item: "A-20"
+      requirements: []
+      full_trace: "A-20 -> task-breakdown.md -> admin map-pin persistence -> AdminOperationsTest"
 
 pending_tasks: []
 untracked_changes: []
@@ -168,6 +334,62 @@ traceability_chain:
       - "app/Support/PhoneNumber.php"
       - "app/Http/Requests/ProfileUpdateRequest.php"
       - "app/Http/Controllers/Auth/RegisteredUserController.php"
+    status: "complete"
+  - chain_id: "A-14"
+    requirement: "A-14"
+    plan_phase: "Admin operations"
+    plan_item: "A-14"
+    tasks: ["A-14"]
+    files:
+      - "app/Http/Controllers/Admin/PricingRuleController.php"
+      - "app/Services/Booking/PricingRuleService.php"
+      - "app/Services/Booking/FareCalculator.php"
+    status: "complete"
+  - chain_id: "A-15"
+    requirement: "A-15"
+    plan_phase: "Admin operations"
+    plan_item: "A-15"
+    tasks: ["A-15"]
+    files:
+      - "app/Http/Controllers/Admin/LocationController.php"
+      - "resources/views/admin/locations/"
+    status: "complete"
+  - chain_id: "A-16"
+    requirement: "A-16"
+    plan_phase: "Admin operations"
+    plan_item: "A-16"
+    tasks: ["A-16"]
+    files:
+      - "app/Http/Controllers/Admin/ReviewController.php"
+      - "database/migrations/2026_11_07_000001_add_admin_response_to_reviews_table.php"
+    status: "complete"
+  - chain_id: "A-17"
+    requirement: "A-17"
+    plan_phase: "Admin operations"
+    plan_item: "A-17"
+    tasks: ["A-17"]
+    files:
+      - "app/Http/Controllers/Admin/SettingsController.php"
+      - "app/Services/CompanySettings.php"
+    status: "complete"
+  - chain_id: "A-18"
+    requirement: "A-18"
+    plan_phase: "Admin operations"
+    plan_item: "A-18"
+    tasks: ["A-18"]
+    files:
+      - "app/Http/Controllers/Admin/ReportController.php"
+      - "resources/views/admin/reports/"
+    status: "complete"
+  - chain_id: "A-20"
+    requirement: "A-20"
+    plan_phase: "Admin operations"
+    plan_item: "A-20"
+    tasks: ["A-20"]
+    files:
+      - "app/Models/Location.php"
+      - "app/Http/Controllers/Admin/LocationController.php"
+      - "routes/web.php"
     status: "complete"
 validation:
   passed: true

@@ -138,6 +138,64 @@ errors: []
 warnings:
   - "No feature specification, constitution, or implementation plan was present; task-breakdown.md defined the scope."
   - "Changes are locally verified but not committed or merged; planning completion credits remain unchanged."
+additional_batches:
+  - batch_id: "A14-A20"
+    completed_tasks: ["A-14", "A-15", "A-16", "A-17", "A-18", "A-20"]
+    blocked_tasks: []
+    required_endpoints: []
+    files_changed:
+      A-14:
+        - "app/Http/Controllers/Admin/PricingRuleController.php"
+        - "app/Services/Booking/PricingRuleService.php"
+        - "app/Services/Booking/FareCalculator.php"
+        - "resources/js/app.js"
+        - "resources/views/booking/create.blade.php"
+      A-15:
+        - "app/Http/Controllers/Admin/LocationController.php"
+        - "app/Models/Location.php"
+        - "resources/views/admin/locations/"
+      A-16:
+        - "app/Http/Controllers/Admin/ReviewController.php"
+        - "app/Models/Review.php"
+        - "database/migrations/2026_11_07_000001_add_admin_response_to_reviews_table.php"
+        - "resources/views/admin/reviews/"
+        - "resources/views/booking/show.blade.php"
+      A-17:
+        - "app/Http/Controllers/Admin/SettingsController.php"
+        - "app/Models/CompanySetting.php"
+        - "app/Services/CompanySettings.php"
+        - "database/migrations/2026_11_07_000000_create_company_settings_table.php"
+        - "resources/views/admin/settings/"
+      A-18:
+        - "app/Http/Controllers/Admin/ReportController.php"
+        - "resources/views/admin/reports/"
+      A-20:
+        - "routes/web.php"
+        - "resources/views/admin/locations/"
+    evidence_mapping:
+      A-14: "AdminOperationsTest verifies pricing CRUD and persisted booking surcharges."
+      A-15: "AdminOperationsTest verifies coordinate bounds, required pairs, and location CRUD."
+      A-16: "AdminOperationsTest verifies moderation, response persistence, and customer display."
+      A-17: "AdminOperationsTest verifies settings validation, public display, and booking lead-time limits."
+      A-18: "AdminOperationsTest verifies date filtering, status counts, and completed fare revenue."
+      A-20: "AdminOperationsTest verifies admin-only pin management and saved coordinates."
+    test_results:
+      command: "php artisan test"
+      passed: 69
+      failed: 0
+      skipped: 0
+      failures: []
+    quality_checks:
+      - command: "vendor\\bin\\pint <changed PHP files>"
+        result: "passed"
+      - command: "npm run build"
+        result: "passed"
+      - command: "php artisan route:list --path=admin --except-vendor"
+        result: "passed; 32 admin routes registered"
+      - command: "git diff --check"
+        result: "passed"
+    warnings:
+      - "Changes are locally verified but not committed or merged; completion credits remain unchanged."
 test_results:
   batch:
     command: "php artisan test"

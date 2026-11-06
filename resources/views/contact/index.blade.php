@@ -53,8 +53,8 @@
                 <p class="contact-intro">Reach us directly or send a message using the form. Include your booking reference if you already have a ride planned.</p>
                 <a class="contact-method" href="tel:{{ config('company.phone') }}"><span class="contact-method-mark" aria-hidden="true">01</span><span><small>Call our team</small><strong>{{ config('company.phone') }}</strong></span><span class="contact-method-arrow" aria-hidden="true">↗</span></a>
                 <a class="contact-method" href="mailto:{{ config('company.email') }}"><span class="contact-method-mark" aria-hidden="true">02</span><span><small>Email us</small><strong>{{ config('company.email') }}</strong></span><span class="contact-method-arrow" aria-hidden="true">↗</span></a>
-                <div class="contact-location"><span class="contact-method-mark" aria-hidden="true">03</span><span><small>Local service</small><strong>Oulu, Finland</strong></span></div>
-                <div class="contact-assurance"><span aria-hidden="true">A</span><p>Local trips, airport transfers, and group journeys across Oulu and nearby.</p></div>
+                <div class="contact-location"><span class="contact-method-mark" aria-hidden="true">03</span><span><small>Local service</small><strong>{{ $companySettings['service_area'] }}</strong></span></div>
+                <div class="contact-assurance"><span aria-hidden="true">A</span><p>Local trips, airport transfers, and group journeys across {{ $companySettings['service_area'] }}.</p></div>
             </div>
 
             <div class="contact-form-panel">

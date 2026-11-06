@@ -10,6 +10,11 @@
         <a class="{{ request()->routeIs('admin.vehicles.*') ? 'is-current' : '' }}" href="{{ route('admin.vehicles.index') }}"><span aria-hidden="true">02</span>Fleet management</a>
         <a class="{{ request()->routeIs('admin.contact-submissions.*') ? 'is-current' : '' }}" href="{{ route('admin.contact-submissions.index') }}"><span aria-hidden="true">03</span>Contact inbox</a>
         <a class="{{ request()->routeIs('admin.bookings.*') ? 'is-current' : '' }}" href="{{ route('admin.bookings.index') }}"><span aria-hidden="true">04</span>Bookings</a>
+        <a class="{{ request()->routeIs('admin.pricing-rules.*') ? 'is-current' : '' }}" href="{{ route('admin.pricing-rules.index') }}"><span aria-hidden="true">05</span>Pricing rules</a>
+        <a class="{{ request()->routeIs('admin.locations.*') ? 'is-current' : '' }}" href="{{ route('admin.locations.index') }}"><span aria-hidden="true">06</span>Locations &amp; map pins</a>
+        <a class="{{ request()->routeIs('admin.reviews.*') ? 'is-current' : '' }}" href="{{ route('admin.reviews.index') }}"><span aria-hidden="true">07</span>Review moderation</a>
+        <a class="{{ request()->routeIs('admin.reports.*') ? 'is-current' : '' }}" href="{{ route('admin.reports.index') }}"><span aria-hidden="true">08</span>Reports</a>
+        <a class="{{ request()->routeIs('admin.settings.*') ? 'is-current' : '' }}" href="{{ route('admin.settings.edit') }}"><span aria-hidden="true">09</span>Company settings</a>
     </nav>
 
     <div class="admin-sidebar-footer">

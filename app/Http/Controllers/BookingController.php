@@ -7,9 +7,12 @@ use App\Models\Location;
 use App\Models\VehicleType;
 use App\Services\Booking\BookingNotificationService;
 use App\Services\Booking\FareCalculator;
+use App\Services\Booking\PricingRuleService;
 use App\Services\Booking\RouteEstimator;
+use App\Services\CompanySettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -17,7 +20,7 @@ use Illuminate\View\View;
 
 class BookingController extends Controller
 {
-    public function create(Request $request): View
+    public function create(Request $request, CompanySettings $settings): View
     {
         $vehicleTypes = VehicleType::query()
             ->where('status', 'active')
@@ -51,13 +54,15 @@ class BookingController extends Controller
             'pickup' => $request->string('pickup_address')->toString(),
             'destination' => $request->string('destination_address')->toString(),
             'bookingDate' => $request->input('booking_date', today()->toDateString()),
+            'bookingMaxDate' => today()->addDays($settings->bookingAdvanceDays())->toDateString(),
+            'pricingRules' => app(PricingRuleService::class)->activeRules(),
             'bookingTime' => $request->input('booking_time', '12:00'),
             'passengers' => (int) $request->input('passengers', 1),
             'selectedVehicleTypeId' => (int) $request->input('vehicle_type_id', $vehicleTypes->first()?->id),
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, CompanySettings $settings): RedirectResponse
     {
         $data = $request->validate([
             'pickup_address' => ['required', 'string', 'max:255'],
@@ -66,7 +71,12 @@ class BookingController extends Controller
             'destination_address' => ['required', 'string', 'max:255'],
             'destination_lat' => ['required', 'numeric', 'between:64.5,65.5'],
             'destination_lng' => ['required', 'numeric', 'between:24.8,26.0'],
-            'booking_date' => ['required', 'date', 'after_or_equal:today'],
+            'booking_date' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+                'before_or_equal:'.today()->addDays($settings->bookingAdvanceDays())->toDateString(),
+            ],
             'booking_time' => ['required', 'date_format:H:i'],
             'passengers' => ['required', 'integer', 'between:1,7'],
             'luggage_count' => ['required', 'integer', 'between:0,10'],
@@ -97,6 +107,7 @@ class BookingController extends Controller
         Request $request,
         RouteEstimator $routeEstimator,
         FareCalculator $fareCalculator,
+        PricingRuleService $pricingRules,
         BookingNotificationService $bookingNotifications,
     ): RedirectResponse {
         $data = $request->session()->pull('booking_draft');
@@ -120,7 +131,9 @@ class BookingController extends Controller
             (float) $data['destination_lat'],
             (float) $data['destination_lng'],
         );
-        $fare = $fareCalculator->calculate($vehicleType, $route['distance_km'], $route['duration_minutes']);
+        $scheduledAt = Carbon::parse($data['booking_date'].' '.$data['booking_time']);
+        $extraCharge = $pricingRules->extraChargeFor($scheduledAt);
+        $fare = $fareCalculator->calculate($vehicleType, $route['distance_km'], $route['duration_minutes'], $extraCharge);
 
         $booking = DB::transaction(function () use ($request, $data, $vehicleType, $route, $fare): Booking {
             $booking = Booking::create([
@@ -142,7 +155,7 @@ class BookingController extends Controller
                 'base_fare' => $fare['base_fare'],
                 'distance_fare' => $fare['distance_fare'],
                 'time_fare' => $fare['time_fare'],
-                'extra_charge' => 0,
+                'extra_charge' => $fare['extra_charge'],
                 'total_fare' => $fare['total_fare'],
                 'status' => Booking::PENDING,
                 'customer_notes' => $data['customer_notes'] ?? null,

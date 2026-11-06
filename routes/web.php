@@ -1,14 +1,19 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\ContactSubmissionController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LocationController as AdminLocationController;
+use App\Http\Controllers\Admin\PricingRuleController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\VehicleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FleetController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoutesController;
-use App\Http\Controllers\Admin\VehicleController;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +67,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/contact-submissions/{contactSubmission}', [ContactSubmissionController::class, 'show'])->name('contact-submissions.show');
     Route::patch('/contact-submissions/{contactSubmission}', [ContactSubmissionController::class, 'update'])->name('contact-submissions.update');
     Route::delete('/contact-submissions/{contactSubmission}', [ContactSubmissionController::class, 'destroy'])->name('contact-submissions.destroy');
+    Route::resource('pricing-rules', PricingRuleController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('locations', AdminLocationController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('/reviews/{review}', [AdminReviewController::class, 'update'])->name('reviews.update');
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::resource('vehicles', VehicleController::class);
 });
 

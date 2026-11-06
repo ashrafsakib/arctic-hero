@@ -53,6 +53,7 @@ if (bookingForm) {
 	const destinationLng = bookingForm.elements.destination_lng;
 	const vehicleTypes = JSON.parse(document.querySelector('[data-vehicle-types]').textContent);
 	const locations = JSON.parse(document.querySelector('[data-locations]').textContent);
+	const pricingRules = JSON.parse(document.querySelector('[data-pricing-rules]').textContent);
 	const state = { step: 1, activePoint: 'pickup', map: null, markers: {}, route: null };
 
 	const number = (value) => Number.parseFloat(value || '0');
@@ -74,12 +75,19 @@ if (bookingForm) {
 		const rawDistance = distanceKm();
 		const distance = Number(rawDistance.toFixed(2));
 		const minutes = Math.ceil(distance / 35 * 60);
-		const distanceFare = distance * Number(vehicle.per_km_rate);
-		const timeFare = minutes * Number(vehicle.per_minute_rate);
-		const total = Number(vehicle.base_fare) + distanceFare + timeFare;
+		const distanceFare = Number((distance * Number(vehicle.per_km_rate)).toFixed(2));
+		const timeFare = Number((minutes * Number(vehicle.per_minute_rate)).toFixed(2));
+		const scheduledAt = `${bookingForm.elements.booking_date.value} ${bookingForm.elements.booking_time.value}:00`;
+		const extraCharge = pricingRules.reduce((total, rule) => {
+			const startsBefore = !rule.starts_at || rule.starts_at <= scheduledAt;
+			const endsAfter = !rule.ends_at || rule.ends_at >= scheduledAt;
+			return startsBefore && endsAfter ? total + Number(rule.extra_charge) : total;
+		}, 0);
+		const total = Number((Number(vehicle.base_fare) + distanceFare + timeFare + extraCharge).toFixed(2));
 		bookingForm.querySelectorAll('[data-fare-base]').forEach((node) => node.textContent = money(vehicle.base_fare));
 		bookingForm.querySelectorAll('[data-fare-distance]').forEach((node) => node.textContent = distance ? `${money(distanceFare)} · ${distance.toFixed(1)} km` : 'Choose both map points');
 		bookingForm.querySelectorAll('[data-fare-time]').forEach((node) => node.textContent = distance ? `${money(timeFare)} · ${minutes} min` : '—');
+		bookingForm.querySelectorAll('[data-fare-extra]').forEach((node) => node.textContent = extraCharge ? money(extraCharge) : '€0.00');
 		bookingForm.querySelectorAll('[data-fare-total]').forEach((node) => node.textContent = money(total));
 		bookingForm.querySelectorAll('[data-fare-route]').forEach((node) => node.textContent = distance ? `${distance.toFixed(1)} km · about ${minutes} min` : 'Set pickup and destination on the map');
 	};
@@ -169,6 +177,8 @@ if (bookingForm) {
 	bookingForm.querySelectorAll('input[name="vehicle_type_id"]').forEach((input) => input.addEventListener('change', updateFare));
 	bookingForm.elements.passengers.addEventListener('change', updateVehicles);
 	bookingForm.elements.luggage_count.addEventListener('change', updateVehicles);
+	bookingForm.elements.booking_date.addEventListener('change', updateFare);
+	bookingForm.elements.booking_time.addEventListener('change', updateFare);
 	const setActivePoint = (kind) => {
 		state.activePoint = kind;
 		bookingForm.querySelector('[data-select-pickup]').setAttribute('aria-pressed', String(kind === 'pickup'));
